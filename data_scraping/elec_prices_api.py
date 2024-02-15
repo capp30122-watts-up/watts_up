@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 
 url = "https://api.eia.gov/v2/electricity/retail-sales/data/"
-#api_key = #TODO GLOBAL VARIABLE
+#api_key = #TODO GLOBAL VARIABLE#
 
 params = {
     "api_key": api_key,

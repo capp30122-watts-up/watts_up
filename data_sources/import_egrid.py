@@ -7,7 +7,7 @@ import os
 
 def list_files_in_folder():
     #folderpath = pathlib.Path(__file__).parent / "egrid_data"
-    folder_path = os.getcwd() + '/egrid_data'
+    folder_path = os.getcwd() + '/egrid_data/post_2014'
     files_list = os.listdir(folder_path)
     return files_list
 
@@ -16,6 +16,7 @@ files_in_folder = list_files_in_folder()
 def filter_plnt_sheets(sheet_name):
     return sheet_name.startswith('PLNT')
 
+names = ['PSTATABB', 'PNAME', 'ORISPL', 'PLTYPE', 'OPRNAME', 'OPRCODE', '']
 
 def clean_ppp_data() -> pd.DataFrame:
     """
@@ -29,15 +30,15 @@ def clean_ppp_data() -> pd.DataFrame:
     Returns:
         A list of CleanedData tuples
     """
-
-
     #folderpath = pathlib.Path(__file__).parent / "egrid_data"
-    folder_path = os.getcwd() + '/egrid_data/'
+    folder_path = os.getcwd() + '/egrid_data/post_2014/'
     files_in_folder = list_files_in_folder()
+    print(files_in_folder)
 
     df_all = pd.DataFrame()
 
     for file in files_in_folder:
+        print(file)
         filename = folder_path + file
 
         pattern = r'(?<=20)(\d{2})'
@@ -70,6 +71,8 @@ def clean_ppp_data() -> pd.DataFrame:
     header_dictionary = {}
     for i, header in enumerate(column_list):
         header_dictionary[header] = descriptor_list[i]
+
+
 
     
 

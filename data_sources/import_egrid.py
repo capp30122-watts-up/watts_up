@@ -11,14 +11,8 @@ def list_files_in_folder():
     files_list = os.listdir(folder_path)
     return files_list
 
-files_in_folder = list_files_in_folder()
 
-def filter_plnt_sheets(sheet_name):
-    return sheet_name.startswith('PLNT')
-
-names = ['PSTATABB', 'PNAME', 'ORISPL', 'PLTYPE', 'OPRNAME', 'OPRCODE', '']
-
-def clean_ppp_data() -> pd.DataFrame:
+def import_PLNT_sheet_data() -> pd.DataFrame:
     """
     This function should load the data from data/il-ppp.csv
     and return a list of CleanedData tuples.
@@ -31,46 +25,39 @@ def clean_ppp_data() -> pd.DataFrame:
         A list of CleanedData tuples
     """
     #folderpath = pathlib.Path(__file__).parent / "egrid_data"
-    folder_path = os.getcwd() + '/egrid_data/post_2014/'
-    files_in_folder = list_files_in_folder()
-    print(files_in_folder)
+    folder_path = os.getcwd() + '/egrid_data/'
 
     df_all = pd.DataFrame()
 
-    for file in files_in_folder:
+    for file in os.listdir(folder_path):
         print(file)
         filename = folder_path + file
-
         pattern = r'(?<=20)(\d{2})'
         match = re.findall(pattern, file)
         sheet = "PLNT"+match[0]
 
-        df = pd.read_excel(
+        # format of excel files is different prior to 2014 release
+        if int(match[0]) < 14:
+            # prior to 2005, sheet names in the workbook were different
+            if match[0] == "04":
+                sheet = "EGRD"+sheet
+            df = pd.read_excel(
             filename,
-            header = 1,
+            header = 4,
             sheet_name=sheet
         )
+        else:
+            df = pd.read_excel(
+                filename,
+                header = 1,
+                sheet_name=sheet
+            )
+
+        df["FILE"] = file
 
         df_all = pd.concat([df_all,df], ignore_index = True)
 
     return df_all
-
-
-
-
-
-    header_df = pd.read_excel(filename, sheet_name="PLNT22", header=0, nrows=0)
-
-    column_list = df.columns.tolist()
-    descriptor_list = header_df.columns.tolist()
-
-    # Feilds of interest
-    column_list_plantinfo = column_list[0:36]
-    column_list_geninfo = column_list[108:]
-
-    header_dictionary = {}
-    for i, header in enumerate(column_list):
-        header_dictionary[header] = descriptor_list[i]
 
 
 

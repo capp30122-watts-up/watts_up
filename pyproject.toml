@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+plotly = "^5.19.0"
+dash = "^2.15.0"
+pandas = "^2.2.0"
 
 
 [build-system]

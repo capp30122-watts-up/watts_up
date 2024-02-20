@@ -5,29 +5,20 @@ import pandas as pd
 import os
 
 
-def list_files_in_folder():
-    #folderpath = pathlib.Path(__file__).parent / "egrid_data"
-    folder_path = os.getcwd() + '/egrid_data/post_2014'
-    files_list = os.listdir(folder_path)
-    return files_list
-
-
 def import_PLNT_sheet_data() -> pd.DataFrame:
     """
-    This function should load the data from data/il-ppp.csv
-    and return a list of CleanedData tuples.
-
-    * For PPP data you should use the ID, BorrowerName, BorrowerCity, and BorrowerZip
-    * All data should be converted to lowercase & stripped of leading and trailing whitespace.
-    * All zip codes should be 5 digits long.
+    This function should load the data in the excel files from egrid_data folder
+    and returns a uncleaned Pandas DataFrame
 
     Returns:
-        A list of CleanedData tuples
+        A dictionary of PandasDataframes
     """
     #folderpath = pathlib.Path(__file__).parent / "egrid_data"
     folder_path = os.getcwd() + '/egrid_data/'
 
     df_all = pd.DataFrame()
+
+    dfs ={}
 
     for file in os.listdir(folder_path):
         print(file)
@@ -55,9 +46,10 @@ def import_PLNT_sheet_data() -> pd.DataFrame:
 
         df["FILE"] = file
 
-        df_all = pd.concat([df_all,df], ignore_index = True)
+        dfs[file] = df
 
-    return df_all
+
+    return dfs
 
 
 

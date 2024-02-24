@@ -1,0 +1,7 @@
+*.pyc
+__pycache__
+.vscode
+.venv
+.DS_store
+api_responses.json
+cleaned_api_responses.json

@@ -2,6 +2,7 @@ import sqlite3
 import pathlib
 import os
 import pandas
+import json
 
 def schema():
     """ Return current version of schema. """
@@ -49,7 +50,15 @@ def schema():
         sector TEXT, 
         nbfactor TEXT
     );
-
+        CREATE TABLE elec_table (
+        stateid TEXT,
+        year INTEGER,
+        year_state TEXT PRIMARY KEY,
+        price_all REAL,
+        price_com REAL,
+        price_ind REAL,
+        price_res REAL
+    );
     """
 
 
@@ -66,6 +75,16 @@ def makedb(df):
 
     df.to_sql('plants', conn, if_exists='replace', index=False)
 
+    data = []
+    with open("cleaned_api_responses.json", "r") as f:
+        data = json.load(f)
+    
+    for entry in data:
+        insert_query = '''
+            INSERT INTO elec_table VALUES (?,?,?,?,?,?,?)
+        '''
+        # Insert data into the table
+        c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
 
     # Commit transaction and close connection
     conn.commit()

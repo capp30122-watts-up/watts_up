@@ -10,14 +10,48 @@ def schema():
     CREATE TABLE plants (
         id INTEGER PRIMARY KEY,
         year TEXT,
+        year_state TEXT,
+        state_id TEXT,
         file TEXT,
         pname TEXT,
-        lat REAL,
+        orispl REAL,
+        oprname TEXT,
+        oprcode INTEGER,
+        utlsrvnm TEXT,
+        nerc TEXT,
+        subrgn TEXT,
+        srname TEXT, 
+        fipsst TEXT,
+        fipscnty TEXT, 
+        cntyname TEXT, 
+        lat REAL, 
         lon REAL,
-        pstatabb TEXT
+        plprmfl TEXT, 
+        plfuelct TEXT,
+        coalflag TEXT,
+        capfac TEXT,
+        namepcap TEXT,
+        plngenan TEXT,
+        plco2an TEXT, 
+        plgenacl TEXT,
+        plgenaol TEXT,
+        plgenags TEXT,
+        plgenanc TEXT,
+        plgenahy TEXT, 
+        plgenabm TEXT, 
+        plgenawi TEXT,
+        plgenaso TEXT,
+        plgenagt TEXT, 
+        plgenatr TEXT,
+        plgenath TEXT,
+        plgenacy TEXT,
+        plgenacn TEXT,
+        sector TEXT, 
+        nbfactor TEXT
     );
 
     """
+
 
 def makedb(df):
     """ (re)create database from a normalized_parks.json from PA #2 """
@@ -29,22 +63,11 @@ def makedb(df):
     conn = sqlite3.connect(path)
     c = conn.cursor()
     c.executescript(schema())
-        
-    # need id_ for generate_times & easy access to foreign key
-    for id, row in df.iterrows():
+
+    df.to_sql('plants', conn, if_exists='replace', index=False)
+
+
+    # Commit transaction and close connection
+    conn.commit()
+    conn.close()
     
-        # insert one row at a time (for clarity & since this isn't speed-critical)
-        c.execute(
-            "INSERT INTO plants (id, year, file, pname, lat, lon, pstatabb) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (
-                id,
-                row["YEAR"],
-                row["FILE"],
-                row["PNAME"],
-                row["LAT"],
-                row["LON"],
-                row["PSTATABB"],
-            ),
-        )
-    c.execute("COMMIT")
-    c.close()

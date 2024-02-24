@@ -8,7 +8,8 @@ import os
 def import_PLNT_sheet_data() -> pd.DataFrame:
     """
     This function should load the data in the excel files from egrid_data folder
-    and returns a uncleaned Pandas DataFrame
+    and returns a dictionary where the keys are file names and the values are
+    corresponding Pandas DataFrame
 
     Returns:
         A dictionary of PandasDataframes
@@ -45,6 +46,9 @@ def import_PLNT_sheet_data() -> pd.DataFrame:
             )
 
         df["FILE"] = file
+
+        if 'YEAR' not in df.columns:
+            df['YEAR'] = '20' + match[0]
 
         dfs[file] = df
 

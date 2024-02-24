@@ -2,6 +2,8 @@
 import pandas as pd
 
 COL_NAMES = ['YEAR',
+ 'year_state',
+ 'state_id',
  'PSTATABB',
  'PNAME',
  'ORISPL',
@@ -57,14 +59,18 @@ def slim_and_append(dict_of_dfs):
     """
 
     df_all = pd.DataFrame()
-    dictc ={}
+
     for name, df in dict_of_dfs.items():
-        #print(df.columns)
+        # rename state_id column
+        df.rename(columns={'PSTATABB': 'state_id'}, inplace=True)
+        df['year_state'] = df['YEAR'].astype(str) + "_" + df['state_id']
         cols_available = [col for col in COL_NAMES if col in df.columns]
-        print(cols_available)
+
+        # filter to desired columns that are available in df 
         df2 = df[cols_available].copy()
-        df_all = pd.concat([df_all,df2], ignore_index = True)
-        #print(df_all.columns)
+        df_all = pd.concat([df_all, df2], ignore_index = True)
+
+    df_all.columns = df_all.columns.str.lower()
         
     return df_all
 

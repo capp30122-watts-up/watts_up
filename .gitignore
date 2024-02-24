@@ -5,3 +5,4 @@ __pycache__
 .DS_store
 api_responses.json
 cleaned_api_responses.json
+data_elec.json

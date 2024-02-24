@@ -51,6 +51,13 @@ def import_PLNT_sheet_data() -> pd.DataFrame:
             df['YEAR'] = '20' + match[0]
 
         dfs[file] = df
+    """
+    # Convert each DataFrame to dictionary
+    dfs_as_dict = {key: df.to_dict(orient='records') for key, df in dfs.items()}
+
+    with open('dict_of_dfs.json', 'w') as f:
+        f.write(dfs_as_dict)
+        """
 
 
     return dfs

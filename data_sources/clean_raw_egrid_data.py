@@ -71,8 +71,15 @@ def slim_and_append(dict_of_dfs):
         df_all = pd.concat([df_all, df2], ignore_index = True)
 
     df_all.columns = df_all.columns.str.lower()
+
+    json_data = df.to_json(orient='records')
+
+    with open('cleaned_egrid_data.json', 'w') as f:
+        f.write(json_data)
         
     return df_all
+
+    
 
 
 

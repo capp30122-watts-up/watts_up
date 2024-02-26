@@ -26,7 +26,7 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='year-dropdown',
         options=[{'label': year, 'value': year} for year in unique_years],
-        value=unique_years[0] # can change value to any year (its set to 2002)
+        value=unique_years[0] # can change value to any year (its set to 2004)
     ),
     html.Div(id='visualizations-placeholder'),
     html.Div(id='top-10-table-placeholder')  

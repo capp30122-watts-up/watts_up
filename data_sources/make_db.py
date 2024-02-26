@@ -1,7 +1,7 @@
 import sqlite3
 import pathlib
 import os
-import pandas
+import pandas as pd
 import json
 
 def schema():
@@ -59,11 +59,27 @@ def schema():
         price_ind REAL,
         price_res REAL
     );
+    CREATE TABLE pop_table (
+        year INTEGER,
+        population INT,
+        stateid TEXT,
+        year_state TEXT PRIMARY KEY
+    );
+    CREATE TABLE gdp_table (
+        year INTEGER,
+        gdp_2022_prices INT,
+        stateid TEXT,
+        year_state TEXT PRIMARY KEY
+    );
+
     """
 
 
-def makedb(df):
-    """ (re)create database from a normalized_parks.json from PA #2 """
+def makedb():
+    """ 
+    """
+    df = pd.read_csv("cleaned_plant_data.csv")
+
     # remove database if it exists already
     path = pathlib.Path("database/plants.db")
     path.unlink()
@@ -75,18 +91,51 @@ def makedb(df):
 
     df.to_sql('plants', conn, if_exists='replace', index=False)
 
-    data = []
+    
     with open("cleaned_api_responses.json", "r") as f:
         data = json.load(f)
     
-    for entry in data:
-        insert_query = '''
-            INSERT INTO elec_table VALUES (?,?,?,?,?,?,?)
-        '''
-        # Insert data into the table
-        c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+        for entry in data:
+            insert_query = '''
+                INSERT INTO elec_table VALUES (?,?,?,?,?,?,?)
+            '''
+            # Insert data into the table
+            c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+
+    # POP Table
+
+    with open("pop_numbers.json", "r") as f:
+        data = json.load(f)
+    
+        for entry in data:
+            insert_query = '''
+                INSERT INTO pop_table VALUES (?,?,?,?)
+            '''
+            # Insert data into the table
+            c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+
+        
+
+    # GDP TABLE
+    with open("gdp_numbers.json", "r") as f:
+        data = json.load(f)
+    
+        for entry in data:
+            insert_query = '''
+                INSERT INTO gdp_table VALUES (?,?,?,?)
+            '''
+            # Insert data into the table
+            c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+
+
+    
 
     # Commit transaction and close connection
     conn.commit()
     conn.close()
-    
+
+def main():
+    makedb()
+
+if __name__ == "__main__":
+    main()

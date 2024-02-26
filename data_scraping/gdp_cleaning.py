@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import regex as re
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data_sources/gdp_pop')
+DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data_sources/gdp_pop_raw_data')
 
 STATE_MAPPING_DATA = {
     'state': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'American Samoa', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',

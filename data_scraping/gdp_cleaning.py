@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import regex as re
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data_sources/gdp_pop')
+DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data_sources/gdp_pop_raw_data')
 
 STATE_MAPPING_DATA = {
     'state': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'American Samoa', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
@@ -56,8 +56,8 @@ def pop_data():
     merged_df1 = pd.merge(pop_final, STATE_MAPPING, left_on='state', right_on='state', how='left')
     merged_df1['year_state'] = merged_df1['year'].astype(str) + '_' + merged_df1['stateid'].astype(str)
     merged_df1 = merged_df1.drop(columns=['state'])
-    merged_df1['year'] = merged_df
-
+    merged_df1['year'] = merged_df1['year'].astype(int)
+    merged_df1['population'] = merged_df1['population'].str.replace(',', '').astype(int)
     #Make the json file
     json_data = merged_df1.to_json(orient='records')
     with open(os.path.join(DATA_DIR,"pop_numbers.json"), 'w') as json_file:

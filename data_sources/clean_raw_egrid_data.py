@@ -1,5 +1,9 @@
-
+import re
+import pathlib
+from typing import List
 import pandas as pd
+import os
+import import_egrid as ie
 
 COL_NAMES = ['YEAR',
  'year_state',
@@ -48,7 +52,7 @@ COL_NAMES = ['YEAR',
 
 
 
-def slim_and_append(dict_of_dfs):
+def slim_and_append():
     
     """
     This function should load the data in the excel files from egrid_data folder
@@ -57,6 +61,8 @@ def slim_and_append(dict_of_dfs):
     Returns:
         A dictionary of PandasDataframes
     """
+
+    dict_of_dfs = ie.import_PLNT_sheet_data()
 
     df_all = pd.DataFrame()
 
@@ -72,12 +78,23 @@ def slim_and_append(dict_of_dfs):
 
     df_all.columns = df_all.columns.str.lower()
 
+    df_all.to_csv("cleaned_plant_data.csv", index=False)
+
+
+
     json_data = df.to_json(orient='records')
 
     with open('cleaned_egrid_data.json', 'w') as f:
         f.write(json_data)
         
     return df_all
+
+def main():
+    slim_and_append()
+
+
+if __name__ == "__main__":
+    main()
 
 
     

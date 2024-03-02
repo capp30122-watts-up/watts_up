@@ -8,3 +8,6 @@ cleaned_api_responses.json
 data_elec.json
 cleaned_egrid_data.json
 plant_data.json
+.ipynb_checkpoints
+pop_numbers.json
+gdp_numbers.json

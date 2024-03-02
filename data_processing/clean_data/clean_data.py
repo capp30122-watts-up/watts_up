@@ -1,9 +1,10 @@
 import pandas as pd
-from data_processing.extract_data import import_PLNT_sheet_data
+#from data_processing.extract_data import import_PLNT_sheet_data
 import pathlib
 import os
 import json
 import regex as re
+from io import StringIO
 
 COL_NAMES = [
     "YEAR",
@@ -60,10 +61,21 @@ def clean_plant_data():
 
     Returns:
         A dictionary of PandasDataframes
+
     """
+    # Read the JSON file
+    output_dir = pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data"
+    json_file_path = output_dir / "plant_data.json"
 
-    dict_of_dfs = import_PLNT_sheet_data()
+    with open(json_file_path, "r") as json_file:
+        json_dataframes = json.load(json_file)
 
+    # Convert JSON data back to DataFrames
+    dict_of_dfs = {}
+    for key, json_string in json_dataframes.items():
+        dict_of_dfs[key] = pd.read_json(StringIO(json_string))
+
+    # Now dfs is your dictionary of DataFrames
     df_all = pd.DataFrame()
 
     for name, df in dict_of_dfs.items():
@@ -77,30 +89,28 @@ def clean_plant_data():
         df_all = pd.concat([df_all, df2], ignore_index=True)
 
     df_all.columns = df_all.columns.str.lower()
+    filepath = str(pathlib.Path(__file__).parent.parent.parent / "data/final_data") + "/" + "cleaned_plant_data.csv"
+    df_all.to_csv(filepath, index=False)
 
-    df_all.to_csv("cleaned_plant_data.csv", index=False)
-
-    json_data = df.to_json(orient="records")
-
-    with open("cleaned_egrid_data.json", "w") as f:
-        f.write(json_data)
+    json_data = df_all.to_json(orient="records")
 
     output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
-    with open(os.path.join(output_dir, "cleaned_egrid_data.json"), "w") as file:
-        json.dump(json_data, file)
+    with open(os.path.join(output_dir, "cleaned_egrid_data.json"), "w") as f:
+        f.write(json_data)
 
 
 def clean_price_data():
     pd_list = []
     data_list = []
-    with open("api_responses.json", "r") as file:
+    json_file_path = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data/api_responses.json")
+    with open(json_file_path, "r") as file:
         responses = json.load(file)
 
     for response in responses:
         data_list += [response['response']['data']]
 
-    for sublist in data_list:
+    for sublist in  data_list:
         for dict in sublist:
             pd_list += [dict]
     cleaned_df = pd.DataFrame(pd_list)
@@ -108,20 +118,29 @@ def clean_price_data():
     cleaned_df['period'] = pd.to_datetime(cleaned_df['period'], format='%Y')
     cleaned_df['year'] = cleaned_df['period'].dt.year
     cleaned_df['year_state'] = cleaned_df['year'].astype(str) + '_' + cleaned_df['stateid'].astype(str)
-    cleaned_df = cleaned_df.drop(columns=["price-units", "sectorName", "stateDescription", "period"])
+    cleaned_df = cleaned_df.drop(columns = ["price-units", "sectorName", "stateDescription","period"])
 
-    cleaned_df['stateid'] = cleaned_df['stateid'].astype(str)
-    cleaned_df['sectorid'] = cleaned_df['sectorid'].astype(str)
+    cleaned_df['stateid'] = cleaned_df['stateid'].astype(str)  
+    cleaned_df['sectorid'] = cleaned_df['sectorid'].astype(str)  
     cleaned_df['price'] = pd.to_numeric(cleaned_df['price'], errors='coerce')
+
+    df_pivoted = cleaned_df.pivot_table(index=['stateid', 'year', 'year_state'],\
+                                        columns='sectorid', values='price').\
+                                            reset_index()
+    df_pivoted.rename(columns={'ALL': 'price_all', 'COM': 'price_com', 'IND': \
+                            'price_ind', 'RES': 'price_res'}, inplace=True)
+    df_pivoted.columns.name = None
+
+    json_data = df_pivoted.to_json(orient='records')
 
     output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
     with open(os.path.join(output_dir, "cleaned_api_responses.json"), "w") as file:
-        json.dump(cleaned_df.to_dict(orient='records'), file)
+        file.write(json_data)
 
 
 
-DATA_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data")
+DATA_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/raw_data/gdp_pop")
 DATA_DIR_OUTPUT = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
 STATE_MAPPING_DATA = {
@@ -184,12 +203,4 @@ def clean_pop_data():
         json_file.write(json_data)
 
 
-def main():
-    clean_plant_data()
-    clean_price_data()
-    clean_gdp_data()
-    clean_pop_data()
 
-
-if __name__ == "__main__":
-    main()

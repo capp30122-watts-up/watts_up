@@ -21,12 +21,19 @@ def makedb():
     c = conn.cursor()
     c.executescript(schema())
 
-    #egrid data table
-    df = pd.read_csv(folder_path +"cleaned_plant_data.csv")
-    df.to_sql('plants', conn, if_exists='replace', index=False)
-    print("finished plants table")
+    # Plant Table
+    with open(folder_path + "cleaned_egrid_data.json", "r") as f:
+        data = json.load(f)
+        for entry in data:
+            insert_query = '''
+                INSERT INTO plants VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+                ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            '''
+            # Insert data into the table
+            c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+    print("finished plant table")
 
-    # pricing data table
+    # Elec Table
     with open(folder_path + "cleaned_api_responses.json", "r") as f:
         data = json.load(f)
         for entry in data:
@@ -57,6 +64,7 @@ def makedb():
             '''
             # Insert data into the table
             c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+    print("finished gdp table")
 
     # Commit transaction and close connection
     conn.commit()

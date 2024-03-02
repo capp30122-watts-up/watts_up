@@ -89,9 +89,7 @@ def clean_plant_data():
         df_all = pd.concat([df_all, df2], ignore_index=True)
 
     df_all.columns = df_all.columns.str.lower()
-    filepath = str(pathlib.Path(__file__).parent.parent.parent / "data/final_data") + "/" + "cleaned_plant_data.csv"
-    df_all.to_csv(filepath, index=False)
-
+    
     json_data = df_all.to_json(orient="records")
 
     output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")

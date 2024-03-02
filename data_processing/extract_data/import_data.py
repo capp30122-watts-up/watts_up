@@ -60,7 +60,7 @@ def fetch_electricity_data():
     with open(os.path.join(output_dir, "api_responses.json"), "w") as file:
         json.dump(responses, file)
 
-def import_PLNT_sheet_data() -> dict:
+def import_PLNT_sheet_data():
     """
     This function loads the data in the Excel files from the egrid_data folder
     and returns a dictionary where the keys are file names and the values are
@@ -69,11 +69,12 @@ def import_PLNT_sheet_data() -> dict:
     Returns:
         A dictionary of Pandas DataFrames.
     """
-    folder_path = os.getcwd() + '/egrid_data/'
+    folder_path = str(pathlib.Path(__file__).parent.parent.parent / "data/raw_data/egrid_data")
+    print(folder_path)
     dfs = {}
 
     for file in os.listdir(folder_path):
-        filename = folder_path + file
+        filename = folder_path + "/" + file
         pattern = r'(?<=20)(\d{2})'
         match = re.findall(pattern, file)
         sheet = "PLNT" + match[0]
@@ -100,10 +101,13 @@ def import_PLNT_sheet_data() -> dict:
 
         dfs[file] = df
 
-    return dfs
+        json_dataframes = {}
+        # Convert each DataFrame to JSON and store in the dictionary
+        for key, df in dfs.items():
+            json_dataframes[key] = df.to_json()
 
-fetch_electricity_data()
+        output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data")
 
-
-if __name__ == "__main__":
-    fetch_electricity_data()
+        # Write the dictionary to a JSON file
+        with open(os.path.join(output_dir, "plant_data.json"), "w") as json_file:
+            json_file.write(json.dumps(json_dataframes, indent=4))

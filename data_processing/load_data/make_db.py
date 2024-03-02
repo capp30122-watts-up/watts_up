@@ -1,125 +1,56 @@
 import sqlite3
 import pathlib
-import os
 import pandas as pd
 import json
+from load_data.schema import schema
 
-def schema():
-    """ Return current version of schema. """
-    
-    return """
-    CREATE TABLE plants (
-        id INTEGER PRIMARY KEY,
-        year TEXT,
-        year_state TEXT,
-        state_id TEXT,
-        file TEXT,
-        pname TEXT,
-        orispl REAL,
-        oprname TEXT,
-        oprcode INTEGER,
-        utlsrvnm TEXT,
-        nerc TEXT,
-        subrgn TEXT,
-        srname TEXT, 
-        fipsst TEXT,
-        fipscnty TEXT, 
-        cntyname TEXT, 
-        lat REAL, 
-        lon REAL,
-        plprmfl TEXT, 
-        plfuelct TEXT,
-        coalflag TEXT,
-        capfac TEXT,
-        namepcap TEXT,
-        plngenan TEXT,
-        plco2an TEXT, 
-        plgenacl TEXT,
-        plgenaol TEXT,
-        plgenags TEXT,
-        plgenanc TEXT,
-        plgenahy TEXT, 
-        plgenabm TEXT, 
-        plgenawi TEXT,
-        plgenaso TEXT,
-        plgenagt TEXT, 
-        plgenatr TEXT,
-        plgenath TEXT,
-        plgenacy TEXT,
-        plgenacn TEXT,
-        sector TEXT, 
-        nbfactor TEXT
-    );
-        CREATE TABLE elec_table (
-        stateid TEXT,
-        year INTEGER,
-        year_state TEXT PRIMARY KEY,
-        price_all REAL,
-        price_com REAL,
-        price_ind REAL,
-        price_res REAL
-    );
-    CREATE TABLE pop_table (
-        year INTEGER,
-        population INT,
-        stateid TEXT,
-        year_state TEXT PRIMARY KEY
-    );
-    CREATE TABLE gdp_table (
-        year INTEGER,
-        gdp_2022_prices INT,
-        stateid TEXT,
-        year_state TEXT PRIMARY KEY
-    );
-
-    """
-
+OUTPUT_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
 def makedb():
     """ 
     """
-    df = pd.read_csv("cleaned_plant_data.csv")
+
+    # save folder path to output directory as string
+    folder_path = str(OUTPUT_DIR) + "/"
 
     # remove database if it exists already
-    path = pathlib.Path("database/plants.db")
+    path = pathlib.Path(OUTPUT_DIR,"plants.db")
     path.unlink()
-    
     # connect to fresh database & create tables
     conn = sqlite3.connect(path)
     c = conn.cursor()
     c.executescript(schema())
 
+    #egrid data table
+    df = pd.read_csv(folder_path +"cleaned_plant_data.csv")
     df.to_sql('plants', conn, if_exists='replace', index=False)
+    print("finished plants table")
 
-    
-    with open("cleaned_api_responses.json", "r") as f:
+    # pricing data table
+    with open(folder_path + "cleaned_api_responses.json", "r") as f:
         data = json.load(f)
-    
         for entry in data:
             insert_query = '''
                 INSERT INTO elec_table VALUES (?,?,?,?,?,?,?)
             '''
             # Insert data into the table
             c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
+    print("finished price table")
 
-    # POP Table
-
-    with open("pop_numbers.json", "r") as f:
+    # POP table
+    with open(folder_path + "pop_numbers.json", "r") as f:
         data = json.load(f)
-    
         for entry in data:
             insert_query = '''
                 INSERT INTO pop_table VALUES (?,?,?,?)
             '''
             # Insert data into the table
             c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
-
-        
+    print("finished pop table")
 
     # GDP TABLE
-    with open("gdp_numbers.json", "r") as f:
+    with open(folder_path + "gdp_numbers.json", "r") as f:
         data = json.load(f)
-    
         for entry in data:
             insert_query = '''
                 INSERT INTO gdp_table VALUES (?,?,?,?)
@@ -127,15 +58,6 @@ def makedb():
             # Insert data into the table
             c.execute(insert_query, tuple(entry[key] for key in entry.keys()))
 
-
-    
-
     # Commit transaction and close connection
     conn.commit()
     conn.close()
-
-def main():
-    makedb()
-
-if __name__ == "__main__":
-    main()

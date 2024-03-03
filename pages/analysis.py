@@ -55,9 +55,8 @@ sorted_fuel_types = sorted(total_capacities, key=total_capacities.get)
 
 
 
-
+#create stracked bar graph 
 def create_grouped_bar_chart(df_grouped_type,sorted_fuel_types):
-    # Create traces for each fuel type
     traces = []
     for fuel_type in sorted_fuel_types:
         traces.append(go.Bar(
@@ -81,9 +80,7 @@ def create_grouped_bar_chart(df_grouped_type,sorted_fuel_types):
 
 
 
-
-
-
+#main layout
 layout = html.Div([
     html.H1('Analysis Page'),
     dcc.Dropdown(
@@ -97,7 +94,7 @@ layout = html.Div([
     ),
     html.Div(id='map-visualization-placeholder', style={'flex': '1'}),
     html.Div(id='bar-chart-placeholder', style={'flex': '1'}),
-    # Placeholder for the data table below the visualizations
+    # Placeholder for the data table below the visualizations - to be updated
     html.Div(id='data-table-placeholder')
 ])
 
@@ -105,8 +102,12 @@ layout = html.Div([
 @callback(
     Output('map-visualization-placeholder', 'children'),
     Output('bar-chart-placeholder', 'children'),
+    Output('data-table-placeholder', 'children'),
     [Input('year-dropdown', 'value')]
 )
+
+#creates bublemap based on year over year change for each plant generator
+
 def update_visualizations(selected_year):
     selected_year = int(selected_year)
     df_previous_and_selected = df_from_db[df_from_db['year'].isin([selected_year - 1, selected_year])]
@@ -141,6 +142,7 @@ def update_visualizations(selected_year):
         name='Year-over-Year Change'
     ))
 
+    #bublemap layout
     bubble_map.update_layout(
         title='Year-over-Year Change in Total Generating Capacity by Plant',
         geo=dict(
@@ -150,7 +152,7 @@ def update_visualizations(selected_year):
             landcolor='rgb(217, 217, 217)',
         )
     )
-
+    # datatable created, will add if needed
     datatable = dash_table.DataTable(
         columns=[{'name': 'Plant Name', 'id': 'pname'}, {'name': 'Change', 'id': 'change'}],
         data=df_top_changes[['pname', 'change']].to_dict('records'),
@@ -168,7 +170,14 @@ def update_visualizations(selected_year):
         }
     ]
 ),
+    retired_plants_count = df_previous_and_selected[df_previous_and_selected['year'] == selected_year - 1]['pname'].nunique()
+    retired_plants_table = html.Table([
+        html.Tr([html.Th('Year'), html.Th('Retired Plants Count')]),
+        html.Tr([html.Td(selected_year - 1), html.Td(retired_plants_count)])
+    ])
     
+    #call barchart to main visual
     bar_chart_figure = create_grouped_bar_chart(df_grouped_type,sorted_fuel_types)
 
-    return dcc.Graph(figure=bubble_map), dcc.Graph(figure=bar_chart_figure)
+
+    return dcc.Graph(figure=bubble_map), dcc.Graph(figure=bar_chart_figure), retired_plants_table

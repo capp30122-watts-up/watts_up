@@ -1,58 +1,10 @@
 import pandas as pd
-#from data_processing.extract_data import import_PLNT_sheet_data
 import pathlib
 import os
 import json
 import regex as re
 from io import StringIO
-
-COL_NAMES = [
-    "YEAR",
-    "year_state",
-    "state_id",
-    "PSTATABB",
-    "PNAME",
-    "ORISPL",
-    "OPRNAME",
-    "OPRCODE",
-    "UTLSRVNM",
-    "UTLSRVID",
-    "SECTOR",
-    "NERC",
-    "SUBRGN",
-    "SRNAME",
-    "FIPSST",
-    "FIPSCNTY",
-    "CNTYNAME",
-    "LAT",
-    "LON",
-    "PLPRMFL",
-    "PLFUELCT",
-    "PLPFGNCT",
-    "COALFLAG",
-    "CAPFAC",
-    "NAMEPCAP",
-    "NBFACTOR",
-    "PLNGENAN",
-    "PLCO2AN",
-    "PLGENACL",
-    "PLGENAOL",
-    "PLGENAGS",
-    "PLGENANC",
-    "PLGENAHY",
-    "PLGENABM",
-    "PLGENAWI",
-    "PLGENASO",
-    "PLGENAGT",
-    "PLGENAOF",
-    "PLGENAOP",
-    "PLGENATN",
-    "PLGENATR",
-    "PLGENATH",
-    "PLGENACY",
-    "PLGENACN",
-    "FILE",
-]
+from watts_up.util.util import COL_NAMES
 
 
 def clean_plant_data():
@@ -62,7 +14,6 @@ def clean_plant_data():
 
     Returns:
         A dictionary of PandasDataframes
-
     """
     # Read the JSON file
     output_dir = pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data"
@@ -200,6 +151,3 @@ def clean_pop_data():
     json_data = merged_df1.to_json(orient='records')
     with open(os.path.join(DATA_DIR_OUTPUT,"pop_numbers.json"), 'w') as json_file:
         json_file.write(json_data)
-
-
-

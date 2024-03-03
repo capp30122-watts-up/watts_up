@@ -1,7 +1,7 @@
 import sqlite3
 import pathlib
 import json
-from load_data.schema import schema
+from watts_up.data_processing.load_data.schema import schema
 
 OUTPUT_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 

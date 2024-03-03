@@ -17,7 +17,7 @@ def df_load(table_name):
     Output:
         df: dataframe
     '''
-    conn = sqlite3.connect('data/final_data/plants.db')
+    conn = sqlite3.connect('watts_up/data/final_data/plants.db')
     
     query = f"SELECT * FROM {table_name}"
 

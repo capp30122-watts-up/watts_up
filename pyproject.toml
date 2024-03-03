@@ -14,6 +14,7 @@ xlrd = "^2.0.1"
 regex = "^2023.12.25"
 openpyxl = "^3.1.2"
 seaborn = "^0.13.2"
+dash-bootstrap-components = "^1.5.0"
 
 
 [build-system]

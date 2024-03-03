@@ -70,17 +70,20 @@ def update_main_plot(selected_state, selected_trend):
         long_df = pd.melt(filtered_df, id_vars=['year'], value_vars=['total_energy', 'non_renewable_energy', 'renewable_energy'],
                         var_name='energy_type', value_name='energy_value')
         plot = px.line(long_df, x='year', y='energy_value', color='energy_type', title=f"Energy Generation Trends in {selected_state}")
+        plot.update_yaxes(title_text=' lb/MWh')
 
     elif selected_trend == 'carbon-trend': 
         filtered_df = df_plants[df_plants['state_id'] == selected_state]
         plot = px.line(filtered_df, x='year', y='carbon_emission', title=f"Carbon Emission Trends in {selected_state}")   
+        plot.update_yaxes(title_text='short tons = 2,000 pounds')
         
     elif selected_trend == 'price-trend':
         filtered_df = df_price[df_price['stateid'] == selected_state]
         long_df = pd.melt(filtered_df, id_vars=['year'], value_vars=['price_total', 'price_commercial', 'price_industrial','price_residential'],
                         var_name='price_type', value_name='price_value')    
         plot = px.line(long_df, x='year', y='price_value', color='price_type', title=f"Energy Price Trends in {selected_state}")
-     
+        plot.update_yaxes(title_text='cents per Kilowatt-hours')
+        
     return plot
 
 # Run the Dash app

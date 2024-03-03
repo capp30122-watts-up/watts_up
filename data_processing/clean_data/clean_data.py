@@ -28,6 +28,7 @@ COL_NAMES = [
     "LON",
     "PLPRMFL",
     "PLFUELCT",
+    "PLPFGNCT",
     "COALFLAG",
     "CAPFAC",
     "NAMEPCAP",

@@ -22,6 +22,7 @@ def schema():
         lon REAL,
         plprmfl TEXT,
         plfuelct TEXT,
+        plpfgnct TEXT,
         coalflag INT,
         capfac REAL,
         namepcap REAL,

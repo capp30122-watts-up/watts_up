@@ -6,3 +6,4 @@ __pycache__
 api_responses.json
 cleaned_api_responses.json
 data_elec.json
+prediction.ipynb

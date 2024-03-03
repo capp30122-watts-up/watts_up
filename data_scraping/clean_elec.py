@@ -23,6 +23,14 @@ cleaned_df['stateid'] = cleaned_df['stateid'].astype(str)
 cleaned_df['sectorid'] = cleaned_df['sectorid'].astype(str)  
 cleaned_df['price'] = pd.to_numeric(cleaned_df['price'], errors='coerce')
 
+df_pivoted = cleaned_df.pivot_table(index=['stateid', 'year', 'year_state'],\
+                                     columns='sectorid', values='price').\
+                                        reset_index()
+df_pivoted.rename(columns={'ALL': 'price_all', 'COM': 'price_com', 'IND': \
+                           'price_ind', 'RES': 'price_res'}, inplace=True)
+df_pivoted.columns.name = None
+
+json_data = df_pivoted.to_json(orient='records')
 
 with open("cleaned_api_responses.json", "w") as file:
-    json.dump(cleaned_df, file)
+    file.write(json_data)

@@ -1,0 +1,52 @@
+,state_id,predicted_year,statistically_significant
+0,AK,2056,Yes
+1,AL,2068,No
+2,AR,Not predictable,No
+3,AZ,2111,Yes
+4,CA,2030,Yes
+5,CO,2037,Yes
+6,CT,2049,No
+7,DC,Not predictable,Yes
+8,DE,2270,Yes
+9,FL,2217,Yes
+10,GA,2107,Yes
+11,HI,2070,Yes
+12,IA,Already there!,Yes
+13,ID,Already there!,Yes
+14,IL,2087,Yes
+15,IN,2099,Yes
+16,KS,2026,Yes
+17,KY,2167,Yes
+18,LA,Not predictable,Yes
+19,MA,2062,Yes
+20,MD,2143,Yes
+21,ME,Already there!,Yes
+22,MI,2114,Yes
+23,MN,2043,Yes
+24,MO,2094,Yes
+25,MS,Not predictable,No
+26,MT,2029,Yes
+27,NC,2089,Yes
+28,ND,2031,Yes
+29,NE,2038,Yes
+30,NH,2080,Yes
+31,NJ,2331,Yes
+32,NM,2032,Yes
+33,NV,2040,Yes
+34,NY,2066,Yes
+35,OH,2299,Yes
+36,OK,2027,Yes
+37,OR,Already there!,Yes
+38,PA,2292,Yes
+39,RI,2117,Yes
+40,SC,2245,Yes
+41,SD,Already there!,Yes
+42,TN,2082,No
+43,TX,2047,Yes
+44,UT,2080,Yes
+45,VA,2154,Yes
+46,VT,Already there!,Yes
+47,WA,Already there!,Yes
+48,WI,2185,Yes
+49,WV,2223,Yes
+50,WY,2055,Yes

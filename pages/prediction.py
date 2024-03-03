@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+import sqlite3
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import statsmodels.api as sm
+import plotly.express as px
+from pathlib import Path
+import dash
+from dash import html, dcc, callback, Output
+import plotly.graph_objects as go
+import numpy as np
+=======
 import dash
 import sqlite3
 import pandas as pd
@@ -6,15 +18,28 @@ from sklearn.linear_model import LinearRegression
 from pathlib import Path
 import statsmodels.api as sm
 import plotly.express as px
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
 
 
 dash.register_page(__name__)
 
+<<<<<<< HEAD
+
+# Connect to the database
+def connect_to_database():
+    conn = sqlite3.connect('data/final_data/plants.db')
+    return conn
+
+
+
+# Query total generation data
+=======
 def connect_to_database():
     db_folder = Path('database')
     conn = sqlite3.connect(db_folder / 'plants.db')
     return conn
 
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
 def query_total_generation(conn):
     query = '''
         SELECT p.year_state, p.year, p.state_id, p.plfuelct,
@@ -25,6 +50,10 @@ def query_total_generation(conn):
     data = pd.read_sql_query(query, conn)
     return data
 
+<<<<<<< HEAD
+# Query plant types data
+=======
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
 def query_plant_types(conn):
     query = '''
         SELECT p.year_state, p.year, p.state_id, p.PLFUELCT,p.PLGENATN as renew_gen,p.PLGENATR as non_renew
@@ -58,7 +87,11 @@ def create_line_chart(counts, plant_typesplotting):
                 category_orders={'plant_type': plant_typesplotting},
                 color_discrete_sequence=px.colors.qualitative.G10)
 
+<<<<<<< HEAD
+    fig.update_layout(title='Percentage of Total Plants for Each Plant Type Over the Years',
+=======
     layout = fig.update_layout(title='Percentage of Total Plants for Each Plant Type Over the Years',
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
                     xaxis_title='Year',
                     yaxis_title='Percentage of Total Plants',
                     legend_title='Plant Type',
@@ -79,6 +112,12 @@ def create_line_chart(counts, plant_typesplotting):
                         width=1100, 
                         height=600)
 
+<<<<<<< HEAD
+    return fig
+
+def create_treemap(raw_df, given_type, year):
+    grouped_data = raw_df.groupby(['year', 'state_id', 'plant_type']).size().reset_index(name='count')
+=======
     fig.show()
 
 
@@ -101,6 +140,7 @@ def prediction_data_prep(data):
 def create_treemap(raw_df,given_type, year):
     grouped_data = raw_df.groupby(['year', 'state_id', 'plant_type']).size().reset_index(name='count')
     given_type = given_type
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
     given_typedf = grouped_data[grouped_data['plant_type'] == given_type]
     fig = px.treemap(given_typedf[given_typedf['year'] == year],
                      path=['state_id'],
@@ -120,7 +160,24 @@ def create_treemap(raw_df,given_type, year):
         font=dict(size=25)
     )
 
+<<<<<<< HEAD
+    return fig
+
+def prediction_data_prep(data):
+    RenewableGeneration = "total_renew_gen"
+    NonRenewableGeneration = "total_non_renew_gen"
+    total_generation_column = "total_generation"
+
+    data[total_generation_column] = data[RenewableGeneration] + data[NonRenewableGeneration]
+
+    data["PercentageRenewable"] = (data[RenewableGeneration] / data[total_generation_column]) * 100
+    data["PercentageNonRenewable"] = (data[NonRenewableGeneration] / data[total_generation_column]) * 100
+    data = data[data['state_id'] != 'PR']
+
+    return data
+=======
     fig.show()
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
 
 def predict_renewable_energy(data, percent_required):
     results = []
@@ -155,9 +212,16 @@ def predict_renewable_energy(data, percent_required):
 
     results_df = pd.DataFrame(results)
     results_df.to_csv('place_holder_predictions.csv')
+<<<<<<< HEAD
+    print("everything works")
+    return results_df
+
+def layout():
+=======
     return results_df
 
 def run():
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f
     conn = connect_to_database()
     data = query_total_generation(conn)
     data2 = query_plant_types(conn)
@@ -165,6 +229,23 @@ def run():
     plant_typesplotting = ['GAS', 'NUCLEAR', 'COAL', 'WIND', 'SOLAR']
     
     counts = prep_line_chart(data2)
+<<<<<<< HEAD
+    line_chart = create_line_chart(counts, plant_typesplotting)
+  
+    treemaps = []
+    for year in [2004, 2014, 2022]:
+        treemap = create_treemap(data2, "COAL", year)
+        treemaps.append(html.Div(dcc.Graph(figure=treemap)))
+
+    percentage = 60
+    predict_df = prediction_data_prep(data)
+    results_df = predict_renewable_energy(predict_df, percentage)
+    layout = html.Div([html.H1('prediction page'),
+                     html.Div(dcc.Graph(figure=line_chart)),
+                     *treemaps,
+                     html.Pre(results_df.to_string())])
+    return layout
+=======
     create_line_chart(counts,plant_typesplotting )
 
 
@@ -176,3 +257,4 @@ def run():
     results_df = predict_renewable_energy(predict_df,percentage)
     print(results_df)
 
+>>>>>>> 269a57121ffe95370c21aedf0c300047f060ec6f

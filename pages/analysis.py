@@ -171,7 +171,7 @@ def update_visualizations(selected_year):
         }
     ]
 ),
-    
+
     bar_chart_figure = create_grouped_bar_chart(df_grouped_type,sorted_fuel_types)
 
     return dcc.Graph(figure=bubble_map), dcc.Graph(figure=bar_chart_figure)

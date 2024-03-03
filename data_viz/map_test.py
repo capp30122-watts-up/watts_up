@@ -7,18 +7,21 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pathlib import Path
 
-#connects to sqlite3 database
 database_path = Path(__file__).parent.parent / 'data_sources' / 'database' / 'plants.db'
 
 connect = sqlite3.connect(database_path)
-# converts to pd from sql query
 df_from_db = pd.read_sql_query("SELECT * FROM plants", connect)
 connect.close()
 df_grouped = df_from_db.groupby('state_id')
 df_summed = df_grouped['plgenacl'].sum().reset_index()
-
 unique_years = df_from_db['year'].unique()
 unique_years.sort()
+
+
+
+
+
+
 
 app = Dash(__name__)
 
@@ -32,7 +35,6 @@ app.layout = html.Div([
     html.Div(id='top-10-table-placeholder')  
 ])
 
-#output
 @app.callback(
     Output('visualizations-placeholder', 'children'),
     [Input('year-dropdown', 'value')]
@@ -44,7 +46,6 @@ def update_visualizations(selected_year):
     df_grouped = filtered_df.groupby('state_id')
     df_summed = df_grouped['plgenacl'].sum().reset_index()
 
-    # Creates the data visualizations based on the filtered groups.     
     choropleth = go.Choropleth(
         locations=df_summed['state_id'],
         z=df_summed['plgenacl'].astype(int),

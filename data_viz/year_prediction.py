@@ -1,9 +1,12 @@
+import dash
+from dash import html, dcc, page, register_page
 import pandas as pd
 import plotly.express as px
-from dash import html, dcc
 
-# Function to create a Dash component for renewable energy predictions
-def create_renewable_energy_dash_component():
+dash.register_page(__name__)
+
+# Define a function to load and preprocess data, then generate the figure
+def load_data_and_create_figure():
     data = pd.read_csv('watts_up/data_viz/place_holder_predictions.csv')
 
     predictable_data = data[data['predicted_year'] != 'Not predictable'].copy()
@@ -17,10 +20,14 @@ def create_renewable_energy_dash_component():
                      title='Predicted Year to Reach 60% Renewable Energy by State',
                      labels={'state_id': 'State', 'predicted_year': 'Predicted Year'},
                      color_discrete_map={'Yes': 'blue', 'No': 'red'})
+    return fig, not_predictable_notice
 
-    # Return a Dash layout component
-    return html.Div([
-        html.H1("Renewable Energy Predictions"),
-        dcc.Graph(id='scatter-plot', figure=fig),
-        html.P(not_predictable_notice)
-    ])
+# Use the function to create the figure and notice
+fig, not_predictable_notice = load_data_and_create_figure()
+
+# Set the page layout
+layout = html.Div([
+    html.H1("Renewable Energy Predictions"),
+    dcc.Graph(id='scatter-plot', figure=fig),
+    html.P(not_predictable_notice)
+])

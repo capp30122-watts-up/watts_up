@@ -7,7 +7,6 @@ from dash import html, dcc
 
 dash.register_page(__name__)
 
-
 def create_renewable_energy_dash_component():
     data = pd.read_csv('data_viz/place_holder_predictions.csv')
 

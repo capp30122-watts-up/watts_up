@@ -7,6 +7,7 @@ from dash import html, dcc
 
 dash.register_page(__name__)
 
+
 def create_renewable_energy_dash_component():
     data = pd.read_csv('data_viz/place_holder_predictions.csv')
 
@@ -17,11 +18,10 @@ def create_renewable_energy_dash_component():
 
     not_predictable_notice = "Note: Predictions are not available for the following states: " + ", ".join(not_predictable_states) + "."
 
-    fig = px.scatter(predictable_data, x='state_id', y='predicted_year', color='statistically_significant',
+    fig = px.scatter(predictable_data, x='state_id', y='predicted_year',
                      title='Predicted Year to Reach 60% Renewable Energy by State',
-                     labels={'state_id': 'State', 'predicted_year': 'Predicted Year'},
-                     color_discrete_map={'Yes': 'blue', 'No': 'red'})
-
+                     labels={'state_id': 'State', 'predicted_year': 'Predicted Year'}
+    )
     # Return a Dash layout component
     return html.Div([
         html.H1("Renewable Energy Predictions"),

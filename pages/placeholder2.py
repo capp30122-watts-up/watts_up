@@ -1,6 +1,5 @@
 import dash
 from dash import html
-#placeholder
 
 dash.register_page(__name__)
 

@@ -1,3 +1,7 @@
+"""
+This file creates the database
+Authors: Jacob Trout and and Praveen Devarajan 
+"""
 import sqlite3
 import pathlib
 import json
@@ -7,6 +11,8 @@ OUTPUT_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
 def makedb():
     """ 
+    This function creates the Plants.db. Pulls all the cleaned versions of the 
+    relevant data and compiles them in the database.
     """
 
     # save folder path to output directory as string

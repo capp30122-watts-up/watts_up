@@ -16,7 +16,7 @@ def run_getdata():
 def run_dash():
     '''Run the dash app
     for local testing: debug=True'''
-    app.app.run_server()
+    app.app.run_server(port = 1223)
 
 
 message = ('To run the dashboard, type "python -m watts_up dashboard" | '

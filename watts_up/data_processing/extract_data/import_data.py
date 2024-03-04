@@ -1,5 +1,7 @@
 '''
-
+This file is used to scrape the pricing data and read in the plant level data 
+from the raw egrid files
+Authors: Jacob Trout and and Praveen Devarajan 
 '''
 
 import os
@@ -10,6 +12,13 @@ import re
 import pathlib
 
 def fetch_electricity_data():
+    """
+    Fetches electricity retail sales data from the U.S. Energy Information 
+    Administration (EIA) API.
+
+    Returns:
+        None: The function writes the fetched data to a JSON file.
+    """
     url = "https://api.eia.gov/v2/electricity/retail-sales/data/"
     api_key = os.environ.get("API_KEY")
 
@@ -49,7 +58,6 @@ def fetch_electricity_data():
     responses =[]
     while True:
         page_data = fetch_page(offset)
-        
         if page_data:
             responses.append(page_data.json())
             total_records = int(page_data.json()["response"]["total"])
@@ -59,7 +67,8 @@ def fetch_electricity_data():
             else:
                 offset += params["length"]
     
-    output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data")
+    output_dir = (pathlib.Path(__file__).parent.parent.parent / 
+                  "data/intermediate_data")
 
     with open(os.path.join(output_dir, "api_responses.json"), "w") as file:
         json.dump(responses, file)

@@ -18,10 +18,11 @@ app.title = 'Watts_Up'
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Dashboard", href="/", active="exact", style={'font-weight': 'bold'})),
-        dbc.NavItem(dbc.NavLink("Analysis", href="/analysis", active="exact", style={'font-weight': 'bold'})),
-        dbc.NavItem(dbc.NavLink("Trends", href="/prediction", style={'font-weight': 'bold'})),
-        dbc.NavItem(dbc.NavLink("Predict", href="/predict", style={'font-weight': 'bold'})),
+        
+        dbc.NavItem(dbc.NavLink("Analysis", href="/", active="exact", style={'font-weight': 'bold'})),
+        dbc.NavItem(dbc.NavLink("State Trends", href="/dashboard", active="exact", style={'font-weight': 'bold'})),
+        dbc.NavItem(dbc.NavLink("National Trends", href="/prediction", style={'font-weight': 'bold'})),
+        dbc.NavItem(dbc.NavLink("Projections", href="/predict", style={'font-weight': 'bold'})),
     ],
     brand="CAPP-30122 Project -  E-Grid Data Visualized",
     brand_href="/",
@@ -44,4 +45,3 @@ app.layout = html.Div([
 
         page_container, ]) 
 ])
-

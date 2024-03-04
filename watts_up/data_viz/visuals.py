@@ -1,5 +1,4 @@
 import plotly.graph_objects as go
-from dash import dash_table
 
 import pandas as pd
 import numpy as np
@@ -102,4 +101,3 @@ def generate_plant_type_map(df_diff, plant_type_color):
     )
 
     return fig
-

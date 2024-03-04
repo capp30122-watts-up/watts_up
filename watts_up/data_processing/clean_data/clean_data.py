@@ -124,11 +124,8 @@ def clean_price_data():
     with open(os.path.join(DATA_DIR_OUTPUT, "cleaned_api_responses.json"), "w") as file:
         file.write(json_data)
 
-
 DATA_DIR = pathlib.Path(__file__).parent.parent.parent / "data/raw_data/gdp_pop"
-
 STATE_MAPPING = pd.DataFrame(STATE_MAPPING_DATA)
-
 
 def clean_gdp_data():
     raw_gdp_path = pathlib.Path(DATA_DIR) / "gdp.csv"

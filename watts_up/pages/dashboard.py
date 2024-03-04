@@ -5,7 +5,7 @@ import plotly.express as px
 import sqlite3
 
 
-dash.register_page(__name__, path='/')
+dash.register_page(__name__)
 
 
 #Connect to the database

@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import plotly.express as px
 
-dash.register_page(__name__)
+dash.register_page(__name__, path='/')
 
 # Aggregates and rename power generation data for clearer analysis of plants
 df_grouped_type = aggregate_and_rename_power_generation_data(df_from_db)
@@ -41,12 +41,12 @@ layout = html.Div([
         id='visualizations-container',
         style={'display': 'flex', 'flexWrap': 'wrap', 'justifyContent': 'space-between'}
     ),
+    html.Div(id='bar-chart-placeholder'),
     # Flex container for side-by-side maps
     html.Div([
         html.Div(id='map-visualization-placeholder', style={'flex': '1'}),
         html.Div(id='plant-type-map-placeholder', style={'flex': '1'})
     ], style={'display': 'flex', 'flexDirection': 'row'}),
-    html.Div(id='bar-chart-placeholder')
 
 ])
 

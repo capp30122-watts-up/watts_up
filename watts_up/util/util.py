@@ -1,6 +1,7 @@
 # util file for large constants
 # contains STATE_NAME_DICT, COL_NAMES
 
+
 STATE_MAPPING_DATA = {
     'state': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'American Samoa', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
                          'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Northern Mariana Islands',

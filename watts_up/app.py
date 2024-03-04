@@ -44,5 +44,3 @@ app.layout = html.Div([
     ]) # End of container
 ])
 
-if __name__ == '__main__':
-    app.run(debug=True)

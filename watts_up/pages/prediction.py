@@ -14,7 +14,7 @@ dash.register_page(__name__)
 
 # Connect to the database
 def connect_to_database():
-    conn = sqlite3.connect('data/final_data/plants.db')
+    conn = sqlite3.connect('watts_up/data/final_data/plants.db')
     return conn
 
 # Query total generation data

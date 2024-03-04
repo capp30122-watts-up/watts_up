@@ -69,10 +69,10 @@ def import_PLNT_sheet_data():
     Returns:
         A dictionary of Pandas DataFrames.
     """
-    folder_path = str(pathlib.Path(__file__).parent.parent.parent / "data/raw_data/egrid_data")
-    print(folder_path)
-    dfs = {}
+    folder_path = str(pathlib.Path(__file__).parent.parent.parent /
+                       "data/raw_data/egrid_data")
 
+    dfs = {}
     for file in os.listdir(folder_path):
         filename = folder_path + "/" + file
         pattern = r'(?<=20)(\d{2})'
@@ -106,7 +106,8 @@ def import_PLNT_sheet_data():
         for key, df in dfs.items():
             json_dataframes[key] = df.to_json()
 
-        output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data")
+        output_dir = (pathlib.Path(__file__).parent.parent.parent 
+                      / "data/intermediate_data")
 
         # Write the dictionary to a JSON file
         with open(os.path.join(output_dir, "plant_data.json"), "w") as json_file:

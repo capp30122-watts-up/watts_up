@@ -3,13 +3,14 @@ import pandas as pd
 import dash
 from dash import Dash, dcc, html, Input, Output, callback
 import plotly.express as px
+import sqlite3
 
 
 dash.register_page(__name__, path='/')
 
 
 #Connect to the database
-engine = create_engine('sqlite:///data/final_data/plants.db')
+engine = sqlite3.connect('watts_up/data/final_data/plants.db')
 
 # Query for energy generation and carbon emission data
 query_plants = '''

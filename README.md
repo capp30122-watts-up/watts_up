@@ -1,11 +1,11 @@
-# watts_up
+# WATTS UP
 CAPP 30122 Group Project
 
 ## Team Members
 [Frank Vasquez](https://github.com/frankvasquez7), [Jacob Trout](https://github.com/jacobtrout), [Praveen Devarajan](https://github.com/pravchand), [Xiaoyue Wei](https://github.com/Wxy-23)
 
 ## Project Summary
-This project analyses data and builds interactive visualizations on electricity generation in the United States
+This project aggregates and analyzes data to builds interactive visualizations on electricity generation in the United States. It seeks explore the relationship between sources energy (renewable vs non-renewable), energy prices, and C02 emissions across states and across time.
 
 ## To Launch the Application
 
@@ -26,8 +26,7 @@ poetry install
 ```
 poetry shell
 ```
-5. [OPTIONAL] Pull data from API, combine multiple years of E-Grid data, clean, and create the database
-Note that one of the API key is needed to extract data from US. Energy Information Administration (EIA). We recommend requesting API key from the EIA directly. This step is optional since the completed database is already present in the application. This step takes approximately 1 minute to run.
+5. [OPTIONAL] Execute the ETL process. Pull data from API, combine multiple years of E-Grid data, clean, and create the database. Note that one of the API key is needed to execute this process. We recommend requesting API key from the EIA directly. This step is optional since the completed database is already present in the application. This step takes approximately 1 minute to run.
 
 Once the API key is acquired, set the variable in your terminal with the following code:
 ```
@@ -41,7 +40,7 @@ python3 -m watts_up getdata
 ```
 python3 -m watts_up dashboard
 ```
-The IDE may automatically launch a new web browser tab, or may provide a local URL. If the latter, paste it into your browser to view the interactive dashboard.
+The IDE will provide a local URL. Either control+click the link or paste it into your browser to view the interactive dashboard.
 
 ## For further information on the project:
 
@@ -55,5 +54,6 @@ Teaching Assistant: Reza Rizky Pratama
 
 Data Sources:
 - Energy Information Agency
-- Enviromental Protection Agency 
+- Environmental Protection Agency 
 - US Census
+

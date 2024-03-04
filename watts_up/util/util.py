@@ -1,6 +1,33 @@
-
+import os
 # util file for large constants
 # contains STATE_NAME_DICT, COL_NAMES,
+
+URL = "https://api.eia.gov/v2/electricity/retail-sales/data/"
+
+API_KEY = os.environ.get("API_KEY")
+FREQUENCY = "annual"
+PARAMS = {
+    "api_key": API_KEY,
+    "frequency": FREQUENCY,
+    "data[0]": "price",
+    "facets[sectorid][]": ["ALL", "COM", "IND", "RES"],
+    "facets[stateid][]": [
+        "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE",
+        "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY",
+        "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT",
+        "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY",
+        "OH", "OK", "OR", "PA", "RI", "SAT", "SC", "SD",
+        "TN", "TX", "UT", "VA", "VT", "WA", "WI",
+        "WV", "WY"
+    ],
+    "start": "2004-01",
+    "end": "2023-11",
+    "sort[0][column]": "period",
+    "sort[0][direction]": "desc",
+    "sort[1][column]": "stateid",
+    "sort[1][direction]": "asc",
+    "length": 5000
+}
 
 
 STATE_MAPPING_DATA = {

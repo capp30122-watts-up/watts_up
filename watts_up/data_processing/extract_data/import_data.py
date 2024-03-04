@@ -11,39 +11,13 @@ import pandas as pd
 import re
 import pathlib
 
-def fetch_electricity_data():
+
+
+def fetch_electricity_data(url,params):
     """
     Fetches electricity retail sales data from the U.S. Energy Information 
     Administration (EIA) API.
     """
-    url = "https://api.eia.gov/v2/electricity/retail-sales/data/"
-    api_key = os.environ.get("API_KEY")
-    output_dir = (pathlib.Path(__file__).parent.parent.parent / 
-                  "data/intermediate_data")
-    output_file = output_dir / "api_responses.json"
-
-    params = {
-        "api_key": api_key,
-        "frequency": "annual",
-        "data[0]": "price",
-        "facets[sectorid][]": ["ALL", "COM", "IND", "RES"],
-        "facets[stateid][]": [
-            "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE",
-            "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY",
-            "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT",
-            "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY",
-            "OH", "OK", "OR", "PA", "RI", "SAT", "SC", "SD",
-            "TN", "TX", "UT", "VA", "VT", "WA", "WI",
-            "WV", "WY"
-        ],
-        "start": "2004-01",
-        "end": "2023-11",
-        "sort[0][column]": "period",
-        "sort[0][direction]": "desc",
-        "sort[1][column]": "stateid",
-        "sort[1][direction]": "asc",
-        "length": 5000
-    }
 
     def fetch_page(offset):
         params["offset"] = offset

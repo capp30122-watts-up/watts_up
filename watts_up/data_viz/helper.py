@@ -32,7 +32,7 @@ def load_and_preprocess_data(table_name):
 
     return df, unique_years
 
-
+#By Praveen
 def plant_type(df, wanted_columns):
     """
     Assigns a plant type to each row in the DataFrame based on the maximum generating capacity.
@@ -87,7 +87,7 @@ def aggregate_and_rename_power_generation_data(df):
 
     return df_grouped_renamed
 
-#Frank
+#By Frank
 def prepare_data_for_bubble_map(df_from_db, selected_year, plant_type_colors):
     '''
         Prepares data for creating a bubble map visualization, showing the change in generating capacity by plant.

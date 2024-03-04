@@ -23,34 +23,23 @@ def create_animated_renewable_energy_dash_component():
 
     data['predicted_year'] = pd.to_numeric(data['predicted_year'], errors='coerce', downcast='integer')
 
-    not_predictable_states = data[data['predicted_year'].isna()]['state_id'].unique()
-    not_predictable_notice = "Note: Predictions are not available for the following states: " + ", ".join(not_predictable_states) + "."
 
-    predictable_data = data.dropna(subset=['predicted_year'])
+    not_predictable_states = data[data['predicted_year'] == 'Not predictable']['state_id'].tolist()
+    not_predictable_notice = "Note: Some states have already reached the level \
+        and predictions are not available for the following states: " + ", ".join(not_predictable_states) + "."
 
-    # determines minimum and maximum years in the dataset for the animation range
-    min_year = data['predicted_year'].min()
-    max_year = data['predicted_year'].max()
-    min_year = int(min_year)
-    max_year = int(max_year)
+    fig = px.choropleth(predictable_data, 
+                        locations='state_id', 
+                        locationmode='USA-states', 
+                        color='predicted_year',
+                        color_continuous_scale='Reds',
+                        #color_continuous_midpoint=20,
+                        title='Predicted Year to Reach 60% Renewable Energy by State',
+                        labels={'predicted_year': 'Predicted Year'})
 
-    frames_data = pd.DataFrame()
-
-    # creates a df  for each year in the range, marking progress towards the goal    
-    for year in range(min_year, max_year + 1):
-        year_data = predictable_data.copy()
-        year_data['display_year'] = year_data['predicted_year'].apply(lambda x: x if x <= year else None)
-        year_data['year'] = year
-        # Aggregate the data for all frames
-        frames_data = pd.concat([frames_data, year_data])
-        
-
-    fig = px.bar(frames_data, x='state_id', y='display_year', animation_frame='year',
-                 title='Progress Towards 60% Renewable Energy by State',
-                 labels={'state_id': 'State', 'display_year': 'Predicted Year'},
-                 range_y=[min_year, max_year])
-
-    fig.update_layout(xaxis_title="State",
+    # Adjust the layout for better readability
+    fig.update_layout(geo=dict(scope='usa', showlakes=True, lakecolor='rgb(255, 255, 255)'),
+                      xaxis_title="State",
                       yaxis_title="Predicted Year",
                       plot_bgcolor="white",
                       transition={'duration': 50}, 
@@ -58,10 +47,17 @@ def create_animated_renewable_energy_dash_component():
                       yaxis=dict(showgrid=True, gridcolor='lightgrey'),
                       )
 
+    fig.update_xaxes(tickangle=45)
+
+    # Set the range of the color scale to cover the predicted years
+    fig.update_coloraxes(colorbar=dict(title='Predicted Year'))
+
+
     return html.Div([
-        html.H1("Renewable Energy Prediction Progress"),
-        dcc.Graph(id='animated-bar-chart', figure=fig),
-        html.P(not_predictable_notice) 
+        html.H1("Renewable Energy Predictions Map"),
+        dcc.Graph(id='choropleth-map', figure=fig),
+        html.P(not_predictable_notice)
     ])
-# Assign the component to the layout variable for viz
-layout = create_animated_renewable_energy_dash_component()
+
+
+layout = create_renewable_energy_dash_component()

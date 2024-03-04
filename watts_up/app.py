@@ -20,7 +20,7 @@ navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Dashboard", href="/", active="exact", style={'font-weight': 'bold'})),
         dbc.NavItem(dbc.NavLink("Analysis", href="/analysis", active="exact", style={'font-weight': 'bold'})),
-        dbc.NavItem(dbc.NavLink("Prediction", href="/prediction", style={'font-weight': 'bold'})),
+        dbc.NavItem(dbc.NavLink("Trends", href="/prediction", style={'font-weight': 'bold'})),
         dbc.NavItem(dbc.NavLink("Predict", href="/predict", style={'font-weight': 'bold'})),
     ],
     brand="CAPP-30122 Project -  E-Grid Data Visualized",

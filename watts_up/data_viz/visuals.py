@@ -41,7 +41,7 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
             color="black"
         ),
         align='center'
-    )]
+    )] 
 )
     
     return go.Figure(data=traces, layout=layout)

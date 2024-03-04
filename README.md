@@ -2,7 +2,7 @@
 CAPP 30122 Group Project
 
 ## Team Members
-[Frank Vasquez] (https://github.com/frankvasquez7), [Jacob Trout] (https://github.com/jacobtrout), [Praveen Devarajan] (https://github.com/pravchand), [Xiaoyue Wei] (https://github.com/Wxy-23)
+[Frank Vasquez](https://github.com/frankvasquez7), [Jacob Trout](https://github.com/jacobtrout), [Praveen Devarajan](https://github.com/pravchand), [Xiaoyue Wei](https://github.com/Wxy-23)
 
 ## Project Summary
 This project analyses data and builds interactive visualizations on electricity generation in the United States

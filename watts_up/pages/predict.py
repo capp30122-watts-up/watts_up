@@ -1,12 +1,23 @@
+'''
+This script creates a Dash component visualizing 
+the predicted year each state will reach 60% renewable energy.
+
+Author: Praveen Chandar + Frank Vasquez
+
+'''
 import dash
 import pandas as pd
 import plotly.express as px
 from dash import html, dcc
 
-# Function to create a Dash component for renewable energy predictions
 dash.register_page(__name__)
 
 def create_renewable_energy_dash_component():
+    '''
+    Returns:
+        A Dash HTML Div component containing the visualization and a note on states without predictions.
+    
+    '''
     data = pd.read_csv('watts_up/data_viz/place_holder_predictions.csv')
 
     predictable_data = data[data['predicted_year'] != 'Not predictable'].copy()
@@ -19,7 +30,7 @@ def create_renewable_energy_dash_component():
                  title='Predicted Year to Reach 60% Renewable Energy by State',
                  labels={'state_id': 'State', 'predicted_year': 'Predicted Year'})
 
-    # Adjust the layout for better readability
+   
     fig.update_layout(xaxis_title="State",
                       yaxis_title="Predicted Year",
                       plot_bgcolor="white",
@@ -28,11 +39,10 @@ def create_renewable_energy_dash_component():
                       )
     fig.update_xaxes(tickangle=45)
 
-    # Set the range of the y-axis from 2024 to the maximum predicted year in the data + 1
+    ## Adjust y-axis range
     max_year = predictable_data['predicted_year'].max()
-    fig.update_yaxes(range=[2024, max_year + 1])  # Adjust y-axis range
+    fig.update_yaxes(range=[2024, max_year + 1])
 
-    # Return a Dash layout component
     return html.Div([
         html.H1("Renewable Energy Predictions"),
         dcc.Graph(id='bar-chart', figure=fig),

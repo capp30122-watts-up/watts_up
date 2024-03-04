@@ -1,8 +1,14 @@
+'''
+Sets up the Dash application and its layout containing anavigation bar and 
+page container for multi-page navigation.
+
+Author: Frank Vasquez
+'''
+
 import dash
 from dash import Dash, html, page_container, dcc
 import dash_bootstrap_components as dbc
-'''
-'''
+
 
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.BOOTSTRAP],
@@ -26,21 +32,16 @@ navbar = dbc.NavbarSimple(
 
 app.layout = html.Div([
 	dbc.Container([
-        # Header
 	    html.H1(children='Watts Up',
 	        style={'textAlign': 'left', 'color': '#4CAF50', 'font-size': '40px', 'font-weight': 'bold'}),
 
         html.Div(children='"E-Grid data represented"',
             style={'textAlign': 'left', 'color': 'black', 'font-size': '20px', 'font-style': 'italic'}),
 
-        # Navigation bar
         html.Div(navbar),
         html.Br(),
         html.P(style={'textAlign': 'right', 'color': 'black', 'font-size': '12px'}),
 
-        #Pages from the pages will be rendered here
-        page_container,
-
-    ]) # End of container
+        page_container, ]) 
 ])
 

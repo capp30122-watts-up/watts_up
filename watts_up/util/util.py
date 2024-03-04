@@ -1,5 +1,6 @@
+
 # util file for large constants
-# contains STATE_NAME_DICT, COL_NAMES
+# contains STATE_NAME_DICT, COL_NAMES,
 
 
 STATE_MAPPING_DATA = {
@@ -112,3 +113,34 @@ COL_NAMES = [
     "PLGENACN",
     "FILE",
 ]
+
+
+PLANT_TYPE_COLOR = {
+    'Gas': 'blue',
+    'Coal': 'black',
+    'Fossil': 'grey',
+    'Wind': 'green',
+    'Nuclear': 'orange',
+    'Solar': 'yellow',
+    'Other': 'purple'
+}
+
+plant_type_colors = {
+    'Coal': 'color_for_coal',
+    'Gas': 'color_for_gas',
+    'Nuclear': 'color_for_nuclear',
+    'Other': 'color_for_other',
+    'Wind': 'color_for_wind',
+    'Solar': 'color_for_solar'
+}
+PLANT_TYPE_ORDER = ['Coal', 'Gas', 'Fossil', 'Nuclear', 'Wind', 'Solar']
+
+WANTED_COLUMNS = {
+    'plgenacl': "Coal",
+    'plgenags': "Gas",
+    'plgenaof': "Fossil",
+    'plgenawi': "Wind",
+    'plgenanc': "Nuclear",
+    'plgenaso': "Solar",
+    'other_sources': "Other"
+}

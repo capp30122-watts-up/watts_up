@@ -6,6 +6,7 @@ Author: Praveen Chandar + Frank Vasquez
 '''
 
 import sqlite3
+import numpy as np
 import pandas as pd
 
 def load_and_preprocess_data(table_name):

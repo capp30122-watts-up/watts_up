@@ -26,7 +26,7 @@ poetry install
 ```
 poetry shell
 ```
-5. [OPTIONAL] Execute the ETL process. Pull data from API, combine multiple years of E-Grid data, clean, and create the database. Note that one of the API key is needed to execute this process. We recommend requesting API key from the EIA directly. This step is optional since the completed database is already present in the application. This step takes approximately 1 minute to run.
+5. [OPTIONAL] Execute the ETL process. Pull data from API, combine multiple years of E-Grid data, clean, and create the database. Note that one of the API key is needed to execute this process. One can request an API key here(https://www.eia.gov/opendata/register.php). We recommend requesting API key from the EIA directly. This step is optional since the completed database is already present in the application. This step takes approximately 1 minute to run.
 
 Once the API key is acquired, set the variable in your terminal with the following code:
 ```

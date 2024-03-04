@@ -46,7 +46,6 @@ layout = html.Div([
         html.Div(id='map-visualization-placeholder', style={'flex': '1'}),
         html.Div(id='plant-type-map-placeholder', style={'flex': '1'})
     ], style={'display': 'flex', 'flexDirection': 'row'}),
-    html.Div(id='comparison-table-container'),
     html.Div(id='bar-chart-placeholder')
 
 ])
@@ -56,7 +55,7 @@ layout = html.Div([
     [Output('map-visualization-placeholder', 'children'),
      Output('bar-chart-placeholder', 'children'),
      Output('plant-type-map-placeholder', 'children')],
-    [Input('year-dropdown', 'value')]
+   [Input('year-dropdown', 'value')]
 )
 
 def update_visualizations(selected_year):

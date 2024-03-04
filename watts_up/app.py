@@ -23,19 +23,19 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink("Prediction", href="/prediction", style={'font-weight': 'bold'})),
         dbc.NavItem(dbc.NavLink("Predict", href="/predict", style={'font-weight': 'bold'})),
     ],
-    brand="Watts Up",
+    brand="CAPP-30122 Project -  E-Grid Data Visualized",
     brand_href="/",
     sticky="top",
-    color="#4CAF50",
+    color="darkgreen",
     dark=True,
 )
 
 app.layout = html.Div([
 	dbc.Container([
 	    html.H1(children='Watts Up',
-	        style={'textAlign': 'left', 'color': '#4CAF50', 'font-size': '40px', 'font-weight': 'bold'}),
+	        style={'textAlign': 'left', 'color': 'darkgreen', 'font-size': '40px', 'font-weight': 'bold'}),
 
-        html.Div(children='"E-Grid data represented"',
+        html.Div(children='',
             style={'textAlign': 'left', 'color': 'black', 'font-size': '20px', 'font-style': 'italic'}),
 
         html.Div(navbar),

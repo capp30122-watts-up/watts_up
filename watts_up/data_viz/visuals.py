@@ -1,4 +1,6 @@
 import plotly.graph_objects as go
+from dash import dash_table
+
 import pandas as pd
 import numpy as np
 
@@ -11,7 +13,10 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
             x=df_filtered['year'],
             y=df_filtered[fuel_type],
             name=fuel_type,
-            marker_color=bar_color
+            marker = dict(
+                color=bar_color,
+                line=dict(color='rgba(0, 0, 0, 0.5)', width=1)  # Add border here
+            )
         ))
     
     layout = go.Layout(
@@ -23,9 +28,9 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
         legend=dict(
             orientation="h",
             x=25,
-            y=0.5,
+            y=10,
             xanchor='left',
-            yanchor='middle'
+            yanchor='bottom',
         )
     )
     
@@ -46,9 +51,9 @@ def bubble_map(df_diff,plant_type_colors):
                 size=df_subset['size'],
                 color=plant_type_colors[plant_type],
                 sizemode='area',
-                line_width=0.5,
+                line=dict(width=.2, color='black'),
                 opacity=0.7
-            ),
+    ),
             name=plant_type  
         ))
     
@@ -85,7 +90,7 @@ def generate_plant_type_map(df_diff, plant_type_color):
         ))
 
     fig.update_layout(
-        title_text='Plant Types Distribution',
+        title_text='Year-over-Year Plant Types Distribution',
         title_x=0.5,
         geo=dict(
             scope='usa',

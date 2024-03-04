@@ -116,7 +116,6 @@ def prepare_data_for_bubble_map(df_from_db, selected_year, plant_type_colors):
     df_diff = df_grouped.pivot(index='pname', columns='year', values='total_gen_capacity')
     df_diff['change'] = df_diff[selected_year] - df_diff.get(selected_year - 1, 0)
 
-    # Merge location and plant type data
     df_locations = df_from_db[['pname', 'lon', 'lat']].drop_duplicates(subset='pname')
     df_diff = df_diff.reset_index().merge(df_locations, on='pname', how='left')
     df_diff = df_diff.merge(df_from_db[['pname', 'plant_type']].drop_duplicates(), on='pname', how='left')
@@ -126,7 +125,6 @@ def prepare_data_for_bubble_map(df_from_db, selected_year, plant_type_colors):
     max_change = max(np.abs(df_diff['change'])) + 1e-9
     df_diff['size'] = np.abs(df_diff['change']) / max_change * 50
 
-    # Use plant type colors for bubbles
     df_diff['color'] = df_diff['plant_type'].map(plant_type_colors)
     df_diff['text'] = df_diff['pname'] + ' (' + df_diff['plant_type'] + '): ' + df_diff['change'].astype(str) + ' MW'
 

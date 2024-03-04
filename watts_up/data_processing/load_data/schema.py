@@ -1,3 +1,8 @@
+"""
+This file contains the definition for the database schema
+Authors: Jacob Trout and Praveen Chandar
+"""
+
 def schema():
     """ Return current version of schema. """
     

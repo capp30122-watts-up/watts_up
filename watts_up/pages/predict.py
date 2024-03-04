@@ -1,16 +1,28 @@
+'''
+    Creates an animated Dash component visualizing the predicted year by which 
+    each state is expected to reach 60% renewable energy.
+
+    Author: Frank Vasquez
+'''
 import dash
 import pandas as pd
 import plotly.express as px
 from dash import html, dcc
 
-# Function to create a Dash component for renewable energy predictions
 dash.register_page(__name__)
 
-def create_renewable_energy_dash_component():
-    data = pd.read_csv('watts_up/data/final_data/place_holder_predictions.csv')
+def create_animated_renewable_energy_dash_component():
+    '''
+    This function loads a dataset from a CSV file containing states and their 
+    respective predicted years for achieving 60% renewable energy.
 
-    predictable_data = data[data['predicted_year'] != 'Not predictable'].copy()
-    predictable_data['predicted_year'] = pd.to_numeric(predictable_data['predicted_year'], errors='coerce')
+     Returns:
+        A Dash HTML containing the animated bar chart
+    '''
+    data = pd.read_csv('watts_up/data_viz/place_holder_predictions.csv')
+
+    data['predicted_year'] = pd.to_numeric(data['predicted_year'], errors='coerce', downcast='integer')
+
 
     not_predictable_states = data[data['predicted_year'] == 'Not predictable']['state_id'].tolist()
     not_predictable_notice = "Note: Some states have already reached the level \
@@ -30,15 +42,17 @@ def create_renewable_energy_dash_component():
                       xaxis_title="State",
                       yaxis_title="Predicted Year",
                       plot_bgcolor="white",
+                      transition={'duration': 50}, 
                       xaxis=dict(showline=True, showgrid=False, linecolor='black'),
                       yaxis=dict(showgrid=True, gridcolor='lightgrey'),
                       )
+
     fig.update_xaxes(tickangle=45)
 
     # Set the range of the color scale to cover the predicted years
     fig.update_coloraxes(colorbar=dict(title='Predicted Year'))
 
-    # Return a Dash layout component
+
     return html.Div([
         html.H1("Renewable Energy Predictions Map"),
         dcc.Graph(id='choropleth-map', figure=fig),

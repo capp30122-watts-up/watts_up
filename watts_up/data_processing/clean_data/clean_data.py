@@ -1,11 +1,18 @@
+'''
+This file is used to clean and format the plant, pricing, gdp, and population 
+data to prepare for database creation
+Authors: Jacob Trout and Praveen Devarajan 
+'''
 import pandas as pd
 import pathlib
 import os
 import json
 import regex as re
 from io import StringIO
-from watts_up.util.util import COL_NAMES,STATE_MAPPING_DATA
+from watts_up.util.util import COL_NAMES, STATE_MAPPING_DATA
 
+
+DATA_DIR_OUTPUT = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
 def clean_plant_data():
     """
@@ -43,15 +50,25 @@ def clean_plant_data():
     df_all.columns = df_all.columns.str.lower()
     
     json_data = df_all.to_json(orient="records")
-
-    output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
-
-    with open(os.path.join(output_dir, "cleaned_egrid_data.json"), "w") as f:
+    with open(os.path.join(DATA_DIR_OUTPUT, "cleaned_egrid_data.json"), "w") as f:
         f.write(json_data)
 
 
 def clean_price_data():
-
+    """
+    Cleans raw price data obtained from API responses stored in a JSON file.
+    Reads the JSON file containing API responses, extracts relevant data, and creates a pandas DataFrame.
+    Cleans the DataFrame by:
+    1. Converting the 'period' column to datetime format and extracting the year.
+    2. Creating a new column 'year_state' by combining 'year' and 'stateid' columns.
+    3. Dropping unnecessary columns: 'price-units', 'sectorName', 'stateDescription', 'period'.
+    4. Converting 'stateid' and 'sectorid' columns to strings.
+    5. Converting 'price' column to numeric format.
+    6. Pivoting the DataFrame to have 'stateid', 'year', 'year_state' as index and 'sectorid' as columns.
+    7. Renaming sectorid columns for better readability: 'ALL' to 'price_all', 'COM' to 'price_com',
+       'IND' to 'price_ind', 'RES' to 'price_res'.
+    8. Writing the cleaned DataFrame to a new JSON file.
+    """
     pd_list = []
     data_list = []
     json_file_path = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data/api_responses.json")
@@ -87,16 +104,11 @@ def clean_price_data():
 
     #Writing the cleaned data to a json file
     json_data = df_pivoted.to_json(orient='records')
-    output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
-    with open(os.path.join(output_dir, "cleaned_api_responses.json"), "w") as file:
+
+    with open(os.path.join(DATA_DIR_OUTPUT, "cleaned_api_responses.json"), "w") as file:
         file.write(json_data)
 
-
-
 DATA_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/raw_data/gdp_pop")
-DATA_DIR_OUTPUT = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
-
-
 
 STATE_MAPPING = pd.DataFrame(STATE_MAPPING_DATA)
 
@@ -116,9 +128,14 @@ def clean_gdp_data():
         json_file.write(json_data)
 
 def clean_pop_data():
+    """
+    Cleans raw population data for the years 2019 and 2022 from CSV files and writes the cleaned data to a JSON file.
+    Reads the raw population data from two CSV files, cleans each separately, merges them,
+    melts to long format, merges with state mapping, drops unnecessary columns, renames columns,
+    creates a new column 'year_state' by combining 'year' and 'stateid', and writes the cleaned DataFrame to a JSON file.
+    """
     pop_2019_path = pathlib.Path(DATA_DIR) / 'p1.csv'
     pop_2022_path = pathlib.Path(DATA_DIR) / 'p2.csv'
-
     pop_2019 = pd.read_csv(pop_2019_path)
     pop_2022 = pd.read_csv(pop_2022_path)
 

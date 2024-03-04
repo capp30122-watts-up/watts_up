@@ -7,7 +7,7 @@ from dash import html, dcc
 dash.register_page(__name__)
 
 def create_renewable_energy_dash_component():
-    data = pd.read_csv('watts_up/data_viz/place_holder_predictions.csv')
+    data = pd.read_csv('watts_up/data/final_data/place_holder_predictions.csv')
 
     predictable_data = data[data['predicted_year'] != 'Not predictable'].copy()
     predictable_data['predicted_year'] = pd.to_numeric(predictable_data['predicted_year'], errors='coerce')

@@ -2,7 +2,7 @@
 This script contains functions designed to facilitate data processing tasks,
  particularly for handling energy production data by plant types. 
 
-Author: Praveen Chandar + Frank Vasquez
+Author: Praveen Chandar Devarajan and Frank Vasquez
 '''
 
 import sqlite3
@@ -87,7 +87,7 @@ def aggregate_and_rename_power_generation_data(df):
 
     return df_grouped_renamed
 
-
+#Frank
 def prepare_data_for_bubble_map(df_from_db, selected_year, plant_type_colors):
     '''
         Prepares data for creating a bubble map visualization, showing the change in generating capacity by plant.

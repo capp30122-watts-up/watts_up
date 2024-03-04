@@ -8,6 +8,10 @@ import dash
 import pandas as pd
 import plotly.express as px
 from dash import html, dcc
+from watts_up.data_viz.regression_predict import run_prediction
+
+#The percentage input for predicting when states will hit x% renewable mix
+PREDICT_PERCENT = 60
 
 dash.register_page(__name__)
 
@@ -19,8 +23,10 @@ def create_animated_renewable_energy_dash_component():
      Returns:
         A Dash HTML containing the animated bar chart
     '''
-    data = pd.read_csv('watts_up/data_viz/place_holder_predictions.csv')
+    percent_predict = PREDICT_PERCENT
+    run_prediction(percent_predict)
 
+    data = pd.read_csv('watts_up/data/final_data/predictions.csv')
     data['predicted_year'] = pd.to_numeric(data['predicted_year'], errors='coerce', downcast='integer')
 
     not_predictable_states = data[data['predicted_year'].isna()]['state_id'].unique()

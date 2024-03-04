@@ -1,5 +1,4 @@
 import plotly.graph_objects as go
-
 import pandas as pd
 import numpy as np
 
@@ -14,12 +13,12 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
             name=fuel_type,
             marker = dict(
                 color=bar_color,
-                line=dict(color='rgba(0, 0, 0, 0.5)', width=1)  # Add border here
+                line=dict(color='rgba(0, 0, 0, 0.5)', width=1),
             )
         ))
     
     layout = go.Layout(
-        title='Energy Production by Year and Fuel Type',
+        title='Energy Production by Year and Fuel Type (2004 - 2022)',
         xaxis=dict({'title': 'Year'},
             type='category'),
         yaxis={'title': 'Energy Production (MW)'},
@@ -30,8 +29,17 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
             y=10,
             xanchor='left',
             yanchor='bottom',
-        )
-    )
+        ),
+        annotations=[{
+        'text': "Note: The year-over-year variation in energy production has remained consistent, but there has been a noticeable rise in the production of renewable energy through the years.",
+        'xref': "paper",
+        'yref': "paper",
+        'x': 0.0, 
+        'y': -0.25, 
+        'showarrow': False,
+        'align': "left"
+    }]
+)
     
     return go.Figure(data=traces, layout=layout)
 
@@ -65,39 +73,63 @@ def bubble_map(df_diff,plant_type_colors):
 
     return bubble_map
 
-def generate_plant_type_map(df_diff, plant_type_color):
+
+def generate_plant_type_map(df_from_db, plant_type_color):
+    years = sorted(df_from_db['year'].unique())
     fig = go.Figure()
 
-    specified_types = ['Gas', 'Coal', 'Fossil', 'Wind', 'Nuclear', 'Solar']
-    df_filtered = df_diff[df_diff['plant_type'].isin(specified_types)]
+    marker_size = 5
 
-    # Map colors or markers to plant types using the defined mapping
-    for plant_type in specified_types:
-        df_type_specific = df_filtered[df_filtered['plant_type'] == plant_type]
-        color = plant_type_color.get(plant_type, 'grey')
-        
-        fig.add_trace(go.Scattergeo(
-            lon=df_type_specific['lon'],
-            lat=df_type_specific['lat'],
-            text=df_type_specific['pname'] + ': ' + df_type_specific['plant_type'],
-            marker=dict(
-                size=10,
-                color=color,  # Use the specified color for the plant type
-                line=dict(width=0.5, color='rgba(0, 0, 0, 0.5)'),
-            ),
-            name=plant_type
-        ))
+    for year in years:
+        df_year = df_from_db[df_from_db['year'] == year]
+
+        for plant_type in df_year['plant_type'].unique():
+            df_type_specific = df_year[df_year['plant_type'] == plant_type]
+            color = plant_type_color.get(plant_type, 'grey')
+
+            fig.add_trace(go.Scattergeo(
+                lon=df_type_specific['lon'],
+                lat=df_type_specific['lat'],
+                text=df_type_specific.apply(lambda row: f"{row['pname']} ({row['plant_type']})", axis=1),
+                marker=dict(
+                    size=marker_size,
+                    color=color,
+                    line=dict(width=0.5, color='rgba(0, 0, 0, 0.5)')
+                ),
+                name=plant_type,  
+                visible=(year == years[0])
+            ))
+    #slider
+    steps = []
+    for i, year in enumerate(years):
+        step = dict(
+            method="update",
+            args=[{"visible": [(year == y) for y in years for _ in df_year['plant_type'].unique()]}],
+            label=str(year)
+        )
+        steps.append(step)
+
+    sliders = [dict(
+        active=0,
+        currentvalue={"prefix": "Year: "},
+        steps=steps,
+    )]
 
     fig.update_layout(
-        title_text='Year-over-Year Plant Types Distribution',
-        title_x=0.5,
+        sliders=sliders,
+        title_text='Plant Locations by Type',
         geo=dict(
             scope='usa',
             projection_type='albers usa',
             showland=True,
             landcolor='rgb(217, 217, 217)',
+            countrycolor="RebeccaPurple",
         ),
-        legend_title_text='Plant Type'
+        legend_title_text='Plant Type',
+        legend=dict(traceorder='normal')
+    )
+    fig.for_each_trace(
+        lambda trace: trace.update(showlegend=(trace.name in df_from_db['plant_type'].unique()))
     )
 
     return fig

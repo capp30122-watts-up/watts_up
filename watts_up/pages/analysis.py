@@ -66,8 +66,8 @@ def update_visualizations(selected_year):
         # Generate visualizations based on the selected year
         bubble_map_fig = bubble_map(df_diff,PLANT_TYPE_COLOR)
         bar_chart_fig = bar_chart(df_filtered, sorted_fuel_types, PLANT_TYPE_COLOR)
-        plant_type_map_fig = generate_plant_type_map(df_diff,PLANT_TYPE_COLOR)
-        
+        plant_type_map_fig = generate_plant_type_map(df_from_db,PLANT_TYPE_COLOR)
+
         # Update and return figures
         bar_chart_fig.update_layout(legend=dict(x=0, y=1.0, bgcolor='rgba(255,255,255,0.5)'))
 

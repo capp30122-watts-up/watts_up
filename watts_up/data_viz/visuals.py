@@ -13,7 +13,7 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
             name=fuel_type,
             marker = dict(
                 color=bar_color,
-                line=dict(color='rgba(0, 0, 0, 0.5)', width=1)  # Add border here
+                line=dict(color='rgba(0, 0, 0, 0.5)', width=1),
             )
         ))
     
@@ -30,18 +30,15 @@ def bar_chart(df_filtered, sorted_fuel_types, plant_type_colors):
             xanchor='left',
             yanchor='bottom',
         ),
-        annotations=[dict(
-        x=.4,
-        y=-.2,
-        xref='paper',
-        yref='paper',
-        text='Overview: YoY limited fluctuation of total energy production(MW), and increase in renewable energy production',
-        font=dict(
-            size=14,
-            color="black"
-        ),
-        align='center'
-    )] 
+        annotations=[{
+        'text': "Note: The year-over-year variation in energy production has remained consistent, but there has been a noticeable rise in the production of renewable energy through the years.",
+        'xref': "paper",
+        'yref': "paper",
+        'x': 0.0, 
+        'y': -0.25, 
+        'showarrow': False,
+        'align': "left"
+    }]
 )
     
     return go.Figure(data=traces, layout=layout)

@@ -4,7 +4,7 @@ import os
 import json
 import regex as re
 from io import StringIO
-from watts_up.util.util import COL_NAMES
+from watts_up.util.util import COL_NAMES,STATE_MAPPING_DATA
 
 
 def clean_plant_data():
@@ -51,6 +51,7 @@ def clean_plant_data():
 
 
 def clean_price_data():
+
     pd_list = []
     data_list = []
     json_file_path = (pathlib.Path(__file__).parent.parent.parent / "data/intermediate_data/api_responses.json")
@@ -64,14 +65,17 @@ def clean_price_data():
         for dict in sublist:
             pd_list += [dict]
     cleaned_df = pd.DataFrame(pd_list)
-
-    cleaned_df['period'] = pd.to_datetime(cleaned_df['period'], format='%Y')
-    cleaned_df['year'] = cleaned_df['period'].dt.year
-    cleaned_df['year_state'] = cleaned_df['year'].astype(str) + '_' + cleaned_df['stateid'].astype(str)
+    
+    for index, row in cleaned_df.iterrows():
+        cleaned_df.at[index, 'period'] = pd.to_datetime(row['period'], format='%Y')
+        cleaned_df.at[index, 'year'] = cleaned_df.at[index, 'period'].year
+        cleaned_df.at[index, 'year_state'] = f"{cleaned_df.at[index, 'year']}_{row['stateid']}"
+        row.stateid = str(row.stateid)
+        row.sectorid = str(row.sectorid)
     cleaned_df = cleaned_df.drop(columns = ["price-units", "sectorName", "stateDescription","period"])
 
-    cleaned_df['stateid'] = cleaned_df['stateid'].astype(str)  
-    cleaned_df['sectorid'] = cleaned_df['sectorid'].astype(str)  
+    # cleaned_df['stateid'] = cleaned_df['stateid'].astype(str)  
+    # cleaned_df['sectorid'] = cleaned_df['sectorid'].astype(str)  
     cleaned_df['price'] = pd.to_numeric(cleaned_df['price'], errors='coerce')
 
     df_pivoted = cleaned_df.pivot_table(index=['stateid', 'year', 'year_state'],\
@@ -81,10 +85,9 @@ def clean_price_data():
                             'price_ind', 'RES': 'price_res'}, inplace=True)
     df_pivoted.columns.name = None
 
+    #Writing the cleaned data to a json file
     json_data = df_pivoted.to_json(orient='records')
-
     output_dir = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
-
     with open(os.path.join(output_dir, "cleaned_api_responses.json"), "w") as file:
         file.write(json_data)
 
@@ -93,41 +96,35 @@ def clean_price_data():
 DATA_DIR = (pathlib.Path(__file__).parent.parent.parent / "data/raw_data/gdp_pop")
 DATA_DIR_OUTPUT = (pathlib.Path(__file__).parent.parent.parent / "data/final_data")
 
-STATE_MAPPING_DATA = {
-    'state': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'American Samoa', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
-                         'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Northern Mariana Islands',
-                         'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Trust Territories', 'Utah', 'Vermont', 'Virgin Islands', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
-    'stateid': ['AL', 'AK', 'AZ', 'AR', 'AS', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS',
-                            'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP',
-                            'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'TT', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY'],
-}
+
 
 STATE_MAPPING = pd.DataFrame(STATE_MAPPING_DATA)
 
 def clean_gdp_data():
-    raw_gdp_path = os.path.join(DATA_DIR, 'gdp.csv')
+    raw_gdp_path = pathlib.Path(DATA_DIR) / 'gdp.csv'
     raw_gdp = pd.read_csv(raw_gdp_path)
 
     melted_df = pd.melt(raw_gdp, id_vars=['Years'], var_name='State', value_name='gdp_2022_prices')
-    merged_df = pd.merge(melted_df, STATE_MAPPING, left_on='State', right_on='state', how='left')
-    merged_df = merged_df.drop(columns=['state','State'])
-    merged_df = merged_df.rename(columns={"Years": 'year'})
+    merged_df = pd.merge(melted_df, STATE_MAPPING, left_on='State', right_on='state', how='left') \
+                .drop(columns=['state', 'State']) \
+                .rename(columns={"Years": 'year'}) 
     merged_df['year_state'] = merged_df['year'].astype(str) + '_' + merged_df['stateid'].astype(str)
 
     # Make the json file
     json_data = merged_df.to_json(orient='records')
-    with open(os.path.join(DATA_DIR_OUTPUT, 'gdp_numbers.json'), 'w') as json_file:
+    with open(pathlib.Path(DATA_DIR_OUTPUT) / 'gdp_numbers.json', 'w') as json_file:
         json_file.write(json_data)
 
 def clean_pop_data():
-    pop_2019_path = os.path.join(DATA_DIR, 'p1.csv')
-    pop_2022_path = os.path.join(DATA_DIR, 'p2.csv')
+    pop_2019_path = pathlib.Path(DATA_DIR) / 'p1.csv'
+    pop_2022_path = pathlib.Path(DATA_DIR) / 'p2.csv'
 
     pop_2019 = pd.read_csv(pop_2019_path)
     pop_2022 = pd.read_csv(pop_2022_path)
 
     # Cleaning pop_2019
-    pop_2019 = pop_2019.drop(columns=['4/1/2010 Census population!!Population', '4/1/2010 population estimates base!!Population'])
+    pop_2019 = pop_2019.drop(columns=['4/1/2010 Census population!!Population',\
+                                       '4/1/2010 population estimates base!!Population'])
     col_names = pop_2019.columns.tolist()
     year_cols = [col_names[0]]
     for column in col_names[1:]:
@@ -147,6 +144,7 @@ def clean_pop_data():
     merged_df1 = merged_df1.drop(columns=['state'])
     merged_df1['year'] = merged_df1['year'].astype(int)
     merged_df1['population'] = merged_df1['population'].str.replace(',', '').astype(int)
+    
     #Make the json file
     json_data = merged_df1.to_json(orient='records')
     with open(os.path.join(DATA_DIR_OUTPUT,"pop_numbers.json"), 'w') as json_file:

@@ -13,14 +13,21 @@ def create_renewable_energy_dash_component():
     predictable_data['predicted_year'] = pd.to_numeric(predictable_data['predicted_year'], errors='coerce')
 
     not_predictable_states = data[data['predicted_year'] == 'Not predictable']['state_id'].tolist()
-    not_predictable_notice = "Note: Predictions are not available for the following states: " + ", ".join(not_predictable_states) + "."
+    not_predictable_notice = "Note: Some states have already reached the level \
+        and predictions are not available for the following states: " + ", ".join(not_predictable_states) + "."
 
-    fig = px.bar(predictable_data, x='state_id', y='predicted_year',
-                 title='Predicted Year to Reach 60% Renewable Energy by State',
-                 labels={'state_id': 'State', 'predicted_year': 'Predicted Year'})
+    fig = px.choropleth(predictable_data, 
+                        locations='state_id', 
+                        locationmode='USA-states', 
+                        color='predicted_year',
+                        color_continuous_scale='Reds',
+                        #color_continuous_midpoint=20,
+                        title='Predicted Year to Reach 60% Renewable Energy by State',
+                        labels={'predicted_year': 'Predicted Year'})
 
     # Adjust the layout for better readability
-    fig.update_layout(xaxis_title="State",
+    fig.update_layout(geo=dict(scope='usa', showlakes=True, lakecolor='rgb(255, 255, 255)'),
+                      xaxis_title="State",
                       yaxis_title="Predicted Year",
                       plot_bgcolor="white",
                       xaxis=dict(showline=True, showgrid=False, linecolor='black'),
@@ -28,14 +35,13 @@ def create_renewable_energy_dash_component():
                       )
     fig.update_xaxes(tickangle=45)
 
-    # Set the range of the y-axis from 2024 to the maximum predicted year in the data + 1
-    max_year = predictable_data['predicted_year'].max()
-    fig.update_yaxes(range=[2024, max_year + 1])  # Adjust y-axis range
+    # Set the range of the color scale to cover the predicted years
+    fig.update_coloraxes(colorbar=dict(title='Predicted Year'))
 
     # Return a Dash layout component
     return html.Div([
-        html.H1("Renewable Energy Predictions"),
-        dcc.Graph(id='bar-chart', figure=fig),
+        html.H1("Renewable Energy Predictions Map"),
+        dcc.Graph(id='choropleth-map', figure=fig),
         html.P(not_predictable_notice)
     ])
 

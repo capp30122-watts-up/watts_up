@@ -13,22 +13,41 @@ import pathlib
 
 
 
-def fetch_electricity_data(url,params):
+def fetch_electricity_data(url, params):
     """
-    Fetches electricity retail sales data from the U.S. Energy Information 
-    Administration (EIA) API.
+    Fetches electricity retail sales data from the U.S. 
+    Energy Information Administration (EIA) API.
+
+    Args:
+        url (str): The URL of the EIA API for fetching electricity 
+        retail sales data.
+        params (dict): The parameters to be included in the API request,
+          including offset and length.
+
+    Returns:
+        None: The fetched data is saved to a JSON file, and the
+          function does not return a value.
     """
+    
     output_dir = (pathlib.Path(__file__).parent.parent.parent / 
                   "data/intermediate_data")
     output_file = output_dir / "api_responses.json"
 
     def fetch_page(offset):
+        
         params["offset"] = offset
-        response = requests.get(url, params=params)
-        return response.json() if response.status_code == 200 else None
+        response = requests.get(url, params = params)
+        if response.status_code == 200:
+            return response.json()
+        
+        # API request failure (non-200 status code)
+        print(f"API request failed with status code {response.status_code}.")
+        return None
 
     offset = 0
     responses =[]
+
+    # fetch pages of data until all records are retrieved
     while True:
         page_data = fetch_page(offset)
         if page_data:
@@ -38,6 +57,9 @@ def fetch_electricity_data(url,params):
                 break
             else:
                 offset += params["length"]
+        else:
+            print("Exiting due to API request failure.")
+            break
     
     with open(output_file, "w") as file:
         json.dump(responses, file)

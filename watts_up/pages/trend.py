@@ -45,7 +45,7 @@ def query_planttypes(conn):
     """
     Query plant types data from the database.
 
-    Args:
+    Input:
         conn (sqlite3.Connection): Database connection object.
 
     Returns:
@@ -75,6 +75,7 @@ def prep_line_chart(df):
     #Use helper function to label the plant into plant_types
     df = plant_type(df,COLUMNS_WANTED)
 
+    # Group by and create the required columns
     df['total_generation'] = df["renew_gen"] + df["non_renew"]
     counts = df.groupby(['year', 'plant_type'])['total_generation'].\
         sum().reset_index(name = 'total_generation_plant_type')
@@ -97,6 +98,7 @@ line_chart = create_line_chart(line_chartdf, PLANT_PLOTTING)
 layout = html.Div([
     html.H1('Analyzing total energy production by plant category'),
     (dcc.Graph(figure=line_chart)),
+    html.H2('TREEMAPS for total number of plants for a year and fuel type'),
     #Drop down for the tree-map, the options are years and plant_types
     dcc.Dropdown(id='type-dropdown',
                  options=[{'label': plant_type, 'value': plant_type}\

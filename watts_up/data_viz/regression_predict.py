@@ -83,6 +83,8 @@ def predict_renewable_energy(data, percent_required):
     grouped_data = data.groupby('state_id')
     for state, state_data in grouped_data:
         if state_data["Percentage_Renewable"].iloc[-1] < percent_required:
+            # currently the testing data is not utilized, but can be for a 
+            # future iteration
             train_data, _ = train_test_split(state_data,\
                                                       test_size=0.2,\
                                                         random_state=100)
@@ -112,7 +114,7 @@ def predict_renewable_energy(data, percent_required):
                                 'statistically_significant': \
                                 statistically_significant})
         else:
-            #Case when the state is already there
+            #Case when the state is already there at the given percent
             results.append({'state_id': state, 'predicted_year': \
                             'Already there!',
                             'statistically_significant': \
@@ -120,7 +122,7 @@ def predict_renewable_energy(data, percent_required):
 
     results_df = pd.DataFrame(results)
     results_df.to_csv('watts_up/data/final_data/predictions.csv')
-    print("everything works")
+    print("prediction works")
 
 def run_prediction(percent_required):
     """
@@ -136,4 +138,3 @@ def run_prediction(percent_required):
     prepped_df = prediction_data_prep(data_prediction)
     predict_renewable_energy(prepped_df, percent_required)
 
-#TODO if script run from main

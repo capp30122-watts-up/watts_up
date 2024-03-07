@@ -12,7 +12,7 @@ import pandas as pd
 def load_and_preprocess_data(table_name):
     '''
      Parameters:
-    - table_name: The name of the table from which to load the data.
+    - table_name: The name of the table from which to load the data for data analysis.
     
     Returns:
     - df:  The preprocessed Pandas DataFrame containing the energy production data.
